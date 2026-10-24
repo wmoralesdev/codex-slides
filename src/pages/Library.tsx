@@ -180,7 +180,7 @@ export function Library() {
             <div className="search-empty">
               <Face config={{ ...FACE_PRESETS.curious, color: FACE_PALETTE.purple }} className="search-empty-face" />
               <h3>No encontramos esa charla.</h3>
-              <p>Probá con Sol, Dots, Codex, Notion o el nombre de un speaker.</p>
+              <p>Probá con Sol, Higgsfield, Codex, Notion o el nombre de un speaker.</p>
               <button className="button secondary" onClick={() => setSearch("")}>
                 Ver toda la agenda
               </button>
