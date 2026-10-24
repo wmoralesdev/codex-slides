@@ -238,7 +238,7 @@ export const snapshot = query({
           .take(MAX_DECK_SLIDES + 1)
       : [];
     if (ownVotes.length > MAX_DECK_SLIDES)
-      throw new ConvexError("La sesión supera el límite de 100 slides.");
+      throw new ConvexError(`La sesión supera el límite de ${MAX_DECK_SLIDES} slides.`);
     const visibleVotes = [
       ...new Map(
         [...currentVotes, ...ownVotes].map((vote) => [vote._id, vote]),

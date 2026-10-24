@@ -29,7 +29,7 @@ describe("DevDay decks", () => {
 
   it("runs the opening, then every talk in agenda order after its demo pause", () => {
     const event = decks[0];
-    // A pause can hold a second demo (pausa-<talk>-2); the first keeps the plain slug.
+    // Each demo is a title slide plus its video (pausa-<talk>-2…); the first keeps the plain slug.
     const extraPause = /^pausa-.+-\d+$/;
     const talkSlugs = talkDecks.flatMap((deck) => [
       `pausa-${deck.slug}`,
@@ -38,7 +38,7 @@ describe("DevDay decks", () => {
     const opening = ["espera", "anuncios", "agenda"];
     const slugs = event.slides.map((slide) => slide.slug);
     expect(slugs.filter((slug) => !extraPause.test(slug))).toEqual([...opening, ...talkSlugs]);
-    expect(slugs).toContain("pausa-codex-en-la-nube-2");
+    expect(slugs).toContain("pausa-codex-en-la-nube-4");
     expect(event.slides.length).toBeLessThanOrEqual(MAX_DECK_SLIDES);
   });
 

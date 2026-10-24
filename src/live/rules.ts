@@ -60,7 +60,7 @@ export function validateManifest(input: CreateSessionInput): void {
   if (!input.deckTitle.trim() || input.deckTitle.length > 200)
     throw new Error("El deck necesita un título de hasta 200 caracteres.");
   if (!input.slides.length || input.slides.length > MAX_DECK_SLIDES)
-    throw new Error("El deck debe tener entre 1 y 100 slides.");
+    throw new Error(`El deck debe tener entre 1 y ${MAX_DECK_SLIDES} slides.`);
   const slugs = new Set<string>();
   for (const slide of input.slides) {
     if (

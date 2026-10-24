@@ -206,6 +206,18 @@ function PauseVideo({ id, label }: { id: string; label: string }) {
   );
 }
 
+/** Project name alone, shown right before its demo video. */
+export function makePauseTitleSlide(project: string) {
+  function PauseTitleSlide() {
+    return (
+      <SlideFrame className="ev-pause-title" footer={false}>
+        <h1 className="dd-display">{project}</h1>
+      </SlideFrame>
+    );
+  }
+  return PauseTitleSlide;
+}
+
 export function makePauseDemoSlide(id: string, label: string) {
   function PauseDemoSlide() {
     return (

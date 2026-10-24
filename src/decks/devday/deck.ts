@@ -3,7 +3,7 @@ import type { Deck, SlideDefinition } from "../types";
 import { devdayCoverSlide } from "../kit/talk";
 import { talkDecks } from "../talks";
 import { withSlideInfo } from "../kit/SlideInfo";
-import { AgendaSlide, AnnouncementsSlide, makePauseDemoSlide } from "./EventSlides";
+import { AgendaSlide, AnnouncementsSlide, makePauseDemoSlide, makePauseTitleSlide } from "./EventSlides";
 
 const deckTitle = "Bienvenida";
 const total = "02";
@@ -54,23 +54,40 @@ const pauseDemos: Record<string, PauseDemo[]> = {
   "decisions-api": [{ id: "reporte-ciudadano", project: "Reporte Ciudadano SV", author: "Cristian Parada Mendoza", duration: "2:07" }],
 };
 
-/** Before each talk, community demos play full screen while its speaker sets up. */
+/**
+ * Before each talk, each community demo gets its project name on a slide of its own,
+ * then plays full screen while the speaker sets up.
+ */
 const pause = (slug: string, title: string): SlideDefinition[] =>
-  pauseDemos[slug].map((demo, i) => {
+  pauseDemos[slug].flatMap((demo, i): SlideDefinition[] => {
     const by = demo.author ? `, de ${demo.author}` : "";
     const label = `Demo de la comunidad: ${demo.project}${by}`;
-    return {
-      slug: i === 0 ? `pausa-${slug}` : `pausa-${slug}-${i + 1}`,
-      title: `Pausa · ${demo.project}`,
-      kicker: `Demo de la comunidad · ${demo.duration}`,
-      component: makePauseDemoSlide(demo.id, label),
-      ambientMotion: true,
-      guide: { intro: `Mientras se prepara «${title}», mirá ${demo.project}, una demo de la comunidad${by}.` },
-      speakerNotes: {
-        script: `Video de ${demo.project}${by} mientras se prepara el siguiente speaker. Arranca solo en la proyección; el presentador lo escucha en silencio.`,
-        timing: `${demo.duration} · fuera del tiempo de charla`,
+    const intro = `Mientras se prepara «${title}», mirá ${demo.project}, una demo de la comunidad${by}.`;
+    // The first title keeps the plain pausa-<talk> slug; the rest are numbered.
+    const n = i * 2;
+    const slugAt = (k: number) => (k === 0 ? `pausa-${slug}` : `pausa-${slug}-${k + 1}`);
+    return [
+      {
+        slug: slugAt(n),
+        title: `Pausa · ${demo.project}`,
+        kicker: "Demo de la comunidad",
+        component: makePauseTitleSlide(demo.project),
+        guide: { intro },
+        speakerNotes: { script: `Presentá ${demo.project}${by}. El video está en la slide siguiente.`, timing: "Fuera del tiempo de charla" },
       },
-    };
+      {
+        slug: slugAt(n + 1),
+        title: `Video · ${demo.project}`,
+        kicker: `Demo de la comunidad · ${demo.duration}`,
+        component: makePauseDemoSlide(demo.id, label),
+        ambientMotion: true,
+        guide: { intro },
+        speakerNotes: {
+          script: `Video de ${demo.project}${by} mientras se prepara el siguiente speaker. Arranca solo en la proyección; el presentador lo escucha en silencio.`,
+          timing: `${demo.duration} · fuera del tiempo de charla`,
+        },
+      },
+    ];
   });
 
 /**

@@ -346,6 +346,17 @@
   line-height: 1.5;
 }
 
+/* Pauses · project name before its demo */
+.ev-pause-title {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.ev-pause-title .dd-display {
+  max-width: 80cqw;
+  font-size: 8cqw;
+}
+
 /* Pauses · community demo video */
 .slide-canvas.ev-pause-demo {
   padding: 0;
