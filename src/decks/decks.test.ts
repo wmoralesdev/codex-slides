@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { decks } from ".";
 import { talkDecks } from "./talks";
+import { MAX_DECK_SLIDES } from "../live/limits";
 
 describe("DevDay decks", () => {
   it("opens with the event deck followed by the six talks", () => {
@@ -11,14 +12,30 @@ describe("DevDay decks", () => {
 
   it("keeps deck slugs, slide slugs and question ids unique", () => {
     expect(new Set(decks.map((deck) => deck.slug)).size).toBe(decks.length);
-    const questionIds = decks.flatMap((deck) =>
-      deck.slides.flatMap((slide) => (slide.question ? [slide.question.id] : [])),
-    );
-    expect(new Set(questionIds).size).toBe(questionIds.length);
+    // The event deck replays every talk, so its question ids repeat theirs on
+    // purpose; votes are per session. Across the talks, and inside each deck,
+    // they stay unique.
+    const questionIdsOf = (list: typeof decks) =>
+      list.flatMap((deck) => deck.slides.flatMap((slide) => (slide.question ? [slide.question.id] : [])));
+    const talkQuestionIds = questionIdsOf(talkDecks);
+    expect(new Set(talkQuestionIds).size).toBe(talkQuestionIds.length);
     for (const deck of decks) {
       const slugs = deck.slides.map((slide) => slide.slug);
       expect(new Set(slugs).size, deck.slug).toBe(slugs.length);
+      const questionIds = questionIdsOf([deck]);
+      expect(new Set(questionIds).size, deck.slug).toBe(questionIds.length);
     }
+  });
+
+  it("runs the opening, then every talk in agenda order after a blank slide", () => {
+    const event = decks[0];
+    const talkSlugs = talkDecks.flatMap((deck) => [
+      `pausa-${deck.slug}`,
+      ...deck.slides.filter((slide) => slide.slug !== "espera").map((slide) => `${deck.slug}-${slide.slug}`),
+    ]);
+    const opening = ["espera", "anuncios", "agenda"];
+    expect(event.slides.map((slide) => slide.slug)).toEqual([...opening, ...talkSlugs]);
+    expect(event.slides.length).toBeLessThanOrEqual(MAX_DECK_SLIDES);
   });
 
   it("starts shared-structure decks with the 00 cover and ends their talks with questions", () => {

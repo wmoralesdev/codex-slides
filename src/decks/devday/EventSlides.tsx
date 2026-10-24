@@ -168,3 +168,8 @@ export function AfterSlide() {
     </SlideFrame>
   );
 }
+
+/** Empty slide between talks, while the next speaker sets up. */
+export function BlankSlide() {
+  return <SlideFrame label="Pausa" footer={false}>{null}</SlideFrame>;
+}

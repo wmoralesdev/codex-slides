@@ -22,7 +22,7 @@ const addressArgs = { namespace: v.string(), sessionId: v.string() };
 const MAX_PRESENTER_PASSWORD_LENGTH = 1024;
 
 function requirePresenterPassword(password: string | undefined): void {
-  const expected = process.env.GROK_PRESENTER_PASSWORD;
+  const expected = process.env.PRESENTER_PASSWORD;
   if (
     !expected ||
     !expected.trim() ||
@@ -165,7 +165,8 @@ export const create = mutation({
       deckTitle: args.deckTitle,
       slides: args.slides,
       activeSlideSlug: args.slides[0].slug,
-      questionOpen: false,
+      questionOpen: true,
+      questionOpenedAt: now,
       showResults: false,
       qrVisible: false,
       projectionTheme: "dark",

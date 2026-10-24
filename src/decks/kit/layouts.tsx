@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Face, Mark } from "../../devday/Face";
-import { AiLabsLogo, CodexWordmark, OpenAIWordmark } from "../../devday/Brand";
+import { AiLabsLogo, CodexWordmark, OpenAILogo, OpenAIWordmark, PortalXLogo } from "../../devday/Brand";
 import { DEVDAY_EVENT } from "../../devday/event";
 import { firstName, type Speaker } from "../../devday/speakers";
 import { FACE_PALETTE, type FaceConfig } from "../../devday/faces";
@@ -143,7 +143,7 @@ export function DevDayCoverSlide() {
     <section className="slide-canvas dd-slide dd-cover" aria-label={`OpenAI ${DEVDAY_EVENT.name} ${DEVDAY_EVENT.city}, organizado por ${DEVDAY_EVENT.organizer}`}>
       <Crowd faces={coverCrowd} marks={coverMarks} className="dd-cover-crowd" />
       <div className="dd-cover-title">
-        <OpenAIWordmark className="dd-cover-openai" />
+        <OpenAILogo className="dd-cover-openai" />
         <h1>
           {DEVDAY_EVENT.name}
           <br />
@@ -159,6 +159,9 @@ export function DevDayCoverSlide() {
           <span className="dd-cover-rule" aria-hidden="true" />
           <span className="dd-cover-org">Organiza</span>
           <AiLabsLogo className="dd-cover-ailabs" />
+          <span className="dd-cover-rule" aria-hidden="true" />
+          <span className="dd-cover-org">Media partner</span>
+          <PortalXLogo className="dd-cover-portalx" />
         </span>
       </div>
     </section>

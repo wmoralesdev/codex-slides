@@ -254,7 +254,7 @@ function AudienceGuide({
             sectionRef={questionRef}
             question={slide.question}
             slideSlug={slide.slug}
-            open={isPresenterSlide && session.questionOpen && !ended}
+            open={session.questionOpen && !ended}
             ownVote={ownVote}
             votes={live.votes}
             showResults={isPresenterSlide && session.showResults}
@@ -262,9 +262,7 @@ function AudienceGuide({
             closedMessage={
               ended
                 ? "La presentación terminó. Ya no se reciben respuestas."
-                : !isPresenterSlide
-                  ? `El presentador está en la slide ${formatSlideNumber(presenterIndex, firstSlideNumber)}. Solo puedes responder su pregunta abierta.`
-                  : "El presentador no tiene abierta esta pregunta."
+                : "El presentador cerró las preguntas."
             }
             onVote={live.vote}
           />
@@ -310,7 +308,7 @@ function AudienceGuide({
         presenterIndex={presenterIndex}
         slideCount={session.slides.length}
         firstSlideNumber={firstSlideNumber}
-        questionOpen={session.questionOpen}
+        questionOpen={session.questionOpen && !!presenterQuestion}
         ended={ended}
         following={following}
         onMove={move}

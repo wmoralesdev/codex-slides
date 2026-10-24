@@ -48,7 +48,7 @@ function setup() {
 }
 
 describe("transporte local", () => {
-  it("no atribuye un voto adelantado o tardío a otra pregunta con opciones iguales", async () => {
+  it("atribuye cada voto a la pregunta de su slide aunque las opciones se repitan", async () => {
     const { transport } = setup();
     const repeatedOptions = structuredClone(input);
     repeatedOptions.slides[1].question = {
@@ -68,37 +68,20 @@ describe("transporte local", () => {
       },
     );
     await transport.join(id);
-    await transport.update(id, {
-      type: "question",
-      open: true,
-      slideSlug: "first",
-    });
 
-    // A reader ahead of the presenter cannot answer a future question.
-    await expect(transport.vote(id, ["yes"], "second")).rejects.toThrow(
-      "La presentación avanzó",
-    );
-    expect(current.votes).toHaveLength(0);
+    // Every question opens with the session: a reader ahead of the presenter can answer.
+    await transport.vote(id, ["yes"], "second");
     await transport.vote(id, ["yes"], "first");
+    expect(current.votes).toHaveLength(2);
 
     await transport.update(id, { type: "navigate", slug: "second" });
-    await transport.update(id, {
-      type: "question",
-      open: true,
-      slideSlug: "second",
-    });
-    // A form still displaying the first slide must not vote in the second.
-    await expect(transport.vote(id, ["no"], "first")).rejects.toThrow(
-      "La presentación avanzó",
-    );
-    expect(current.votes).toHaveLength(1);
-    expect(current.votes[0]).toMatchObject({
-      questionId: "q1",
-      slideSlug: "first",
-      optionIds: ["yes"],
-    });
+    // Each vote stays with its own slide's question even when the options match.
     await transport.vote(id, ["no"], "second");
     expect(current.votes).toHaveLength(2);
+    expect(current.votes.find((v) => v.slideSlug === "first")).toMatchObject({
+      questionId: "q1",
+      optionIds: ["yes"],
+    });
     expect(current.votes.find((v) => v.slideSlug === "second")).toMatchObject({
       questionId: "q2",
       optionIds: ["no"],
@@ -108,8 +91,8 @@ describe("transporte local", () => {
       open: false,
       slideSlug: "second",
     });
-    await expect(transport.vote(id, ["yes"], "second")).rejects.toThrow(
-      "no ha abierto",
+    await expect(transport.vote(id, ["yes"], "first")).rejects.toThrow(
+      "cerró las preguntas",
     );
     unsubscribe();
   });
@@ -138,21 +121,14 @@ describe("transporte local", () => {
     await transport.join(id);
     expect(current.participant).toEqual(avatar);
     expect(current.participants).toHaveLength(1);
-    await expect(transport.vote(id, ["yes"], "first")).rejects.toThrow(
-      "no ha abierto",
-    );
-    await transport.update(id, {
-      type: "question",
-      open: true,
-      slideSlug: "first",
-    });
+    expect(current.session?.questionOpen).toBe(true);
     await transport.vote(id, ["yes"], "first");
     await transport.vote(id, ["no"], "first");
     expect(current.votes).toHaveLength(1);
     expect(current.votes[0].optionIds).toEqual(["no"]);
     await transport.update(id, { type: "navigate", slug: "second" });
     expect(current.session?.activeSlideSlug).toBe("second");
-    expect(current.session?.questionOpen).toBe(false);
+    expect(current.session?.questionOpen).toBe(true);
     await expect(
       transport.update(id, {
         type: "question",
@@ -163,8 +139,7 @@ describe("transporte local", () => {
     await expect(
       transport.update(id, { type: "results", show: true, slideSlug: "first" }),
     ).rejects.toThrow("La presentación avanzó");
-    expect(current.session?.questionOpen).toBe(false);
-    expect(current.session?.showResults).toBe(false);
+    expect(current.session?.questionOpen).toBe(true);
     await transport.update(id, { type: "end" });
     await expect(transport.join(id)).rejects.toThrow("ya terminó");
     await expect(transport.vote(id, ["yes"], "first")).rejects.toThrow(

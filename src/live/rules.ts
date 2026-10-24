@@ -128,7 +128,6 @@ export function applyPresenterAction(
       return {
         ...session,
         activeSlideSlug: action.slug,
-        questionOpen: false,
         showResults: false,
         qrVisible: false,
         updatedAt: now,
@@ -208,15 +207,10 @@ export function validateVote(
   expectedSlideSlug = session.activeSlideSlug,
 ): Vote {
   if (session.status !== "live") throw new Error("Esta sesión ya terminó.");
-  if (session.activeSlideSlug !== expectedSlideSlug)
-    throw new Error(
-      "La presentación avanzó. Responde la pregunta de la slide actual.",
-    );
+  // Questions open together when the session starts, so any slide's question takes answers.
   if (!session.questionOpen)
-    throw new Error("El presentador todavía no ha abierto esta pregunta.");
-  const slide = session.slides.find(
-    (item) => item.slug === session.activeSlideSlug,
-  );
+    throw new Error("El presentador cerró las preguntas.");
+  const slide = session.slides.find((item) => item.slug === expectedSlideSlug);
   const question = slide?.question;
   if (!question || !slide) throw new Error("Esta slide no tiene una pregunta.");
   const valid = new Set(question.options.map((option) => option.id));

@@ -18,7 +18,7 @@ export function Crowd({
         <span
           key={`face-${index}`}
           className="dd-crowd-item"
-          style={{ "--x": `${x}cqw`, "--y": `${y}cqw`, "--size": `${size}cqw`, "--i": index } as CSSProperties}
+          style={{ "--x": `${x}cqw`, "--y": `${y}cqw`, "--size": `${size}cqw`, "--i": index, "--xn": x } as CSSProperties}
         >
           <Face config={face} />
         </span>
@@ -27,7 +27,7 @@ export function Crowd({
         <span
           key={`mark-${index}`}
           className="dd-crowd-item dd-crowd-mark"
-          style={{ "--x": `${x}cqw`, "--y": `${y}cqw`, "--size": `${size}cqw`, "--i": index + 3 } as CSSProperties}
+          style={{ "--x": `${x}cqw`, "--y": `${y}cqw`, "--size": `${size}cqw`, "--i": index + 3, "--xn": x } as CSSProperties}
         >
           <Mark kind={kind} color={color} />
         </span>

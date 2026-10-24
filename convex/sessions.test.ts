@@ -11,7 +11,7 @@ const presenterKey = "a".repeat(48);
 const presenterPassword = "fixture-only-password-2026";
 
 beforeEach(() => {
-  vi.stubEnv("GROK_PRESENTER_PASSWORD", presenterPassword);
+  vi.stubEnv("PRESENTER_PASSWORD", presenterPassword);
 });
 
 afterEach(() => {
@@ -97,7 +97,7 @@ describe("contraseña del presentador en el servidor", () => {
     "falla cerrado cuando la contraseña del servidor no está configurada correctamente",
     async (configured) => {
       const t = convexTest(schema, modules);
-      vi.stubEnv("GROK_PRESENTER_PASSWORD", configured);
+      vi.stubEnv("PRESENTER_PASSWORD", configured);
       const error = { data: { code: "PRESENTER_PASSWORD_NOT_CONFIGURED" } };
       await expect(
         t.mutation(sessionsApi.authorizePresenter, {
@@ -121,7 +121,7 @@ describe("contraseña del presentador en el servidor", () => {
   it("autoriza sin escribir datos y conserva los espacios de una contraseña válida", async () => {
     const t = convexTest(schema, modules);
     const exactPassword = "  contraseña con espacios  ";
-    vi.stubEnv("GROK_PRESENTER_PASSWORD", exactPassword);
+    vi.stubEnv("PRESENTER_PASSWORD", exactPassword);
     await expect(
       t.mutation(sessionsApi.authorizePresenter, { password: exactPassword }),
     ).resolves.toBeNull();
@@ -225,7 +225,7 @@ describe("contraseña del presentador en el servidor", () => {
       presenterPassword,
       action: { type: "question", open: true, slideSlug: "welcome" },
     });
-    vi.stubEnv("GROK_PRESENTER_PASSWORD", "contraseña-rotada");
+    vi.stubEnv("PRESENTER_PASSWORD", "contraseña-rotada");
     await expect(
       t.mutation(sessionsApi.update, {
         ...address,
@@ -234,7 +234,7 @@ describe("contraseña del presentador en el servidor", () => {
         action: { type: "end" },
       }),
     ).rejects.toMatchObject({ data: { code: "PRESENTER_PASSWORD_INVALID" } });
-    vi.stubEnv("GROK_PRESENTER_PASSWORD", undefined);
+    vi.stubEnv("PRESENTER_PASSWORD", undefined);
     await expect(
       t.mutation(sessionsApi.update, {
         ...address,
@@ -285,7 +285,7 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       namespace: address.namespace,
       status: "live",
       activeSlideSlug: "welcome",
-      questionOpen: false,
+      questionOpen: true,
       qrVisible: false,
       projectionTheme: "dark",
     });
@@ -514,7 +514,10 @@ describe("funciones de Convex con su esquema y base de datos", () => {
             .eq("publicId", address.sessionId),
         )
         .unique();
-      await ctx.db.patch("sessions", row!._id, { questionOpen: true });
+      await ctx.db.patch("sessions", row!._id, {
+        questionOpen: true,
+        questionOpenedAt: undefined,
+      });
       return row!._id;
     });
     const open = await t.query(sessionsApi.snapshot, address);
@@ -650,7 +653,7 @@ describe("funciones de Convex con su esquema y base de datos", () => {
     ).rejects.toThrow("Únete");
   });
 
-  it("valida estado, opciones, slide activa y sesiones finalizadas en el servidor", async () => {
+  it("valida estado, opciones, preguntas cerradas y sesiones finalizadas en el servidor", async () => {
     const t = await setup();
     await t.mutation(sessionsApi.join, {
       ...address,
@@ -661,9 +664,15 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       participantToken: tokenOne,
       slideSlug: "welcome",
     };
+    await t.mutation(sessionsApi.update, {
+      presenterPassword,
+      ...address,
+      presenterKey,
+      action: { type: "question", open: false, slideSlug: "welcome" },
+    });
     await expect(
       t.mutation(sessionsApi.vote, { ...voteArgs, optionIds: ["yes"] }),
-    ).rejects.toThrow("no ha abierto");
+    ).rejects.toThrow("cerró las preguntas");
     await t.mutation(sessionsApi.update, {
       presenterPassword,
       ...address,
@@ -698,16 +707,15 @@ describe("funciones de Convex con su esquema y base de datos", () => {
     ).rejects.toThrow("La presentación avanzó");
     expect(
       (await t.query(sessionsApi.snapshot, address)).session,
-    ).toMatchObject({ questionOpen: false, showResults: false });
+    ).toMatchObject({ questionOpen: true });
     await t.mutation(sessionsApi.update, {
       presenterPassword,
       ...address,
       presenterKey,
       action: { type: "question", open: true, slideSlug: "workflow" },
     });
-    await expect(
-      t.mutation(sessionsApi.vote, { ...voteArgs, optionIds: ["yes"] }),
-    ).rejects.toThrow("La presentación avanzó");
+    // Questions on other slides keep taking answers while they are open.
+    await t.mutation(sessionsApi.vote, { ...voteArgs, optionIds: ["yes"] });
     await t.mutation(sessionsApi.vote, {
       ...voteArgs,
       slideSlug: "workflow",

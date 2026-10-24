@@ -155,7 +155,7 @@ function InteractionPanel({
                   onClick={() => onQuestionOpen(!votingOpen)}
                 >
                   {votingOpen ? <Stop size={16} /> : <Play size={16} />}
-                  {votingOpen ? "Cerrar encuesta" : "Abrir encuesta"}
+                  {votingOpen ? "Cerrar encuestas" : "Abrir encuestas"}
                 </button>
               </div>
               <p className="small muted">

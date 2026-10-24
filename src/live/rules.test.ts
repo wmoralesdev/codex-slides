@@ -94,7 +94,7 @@ describe("manifiesto y estado de una presentación", () => {
     duplicate.slides[0].question!.options[1].id = "yes";
     expect(() => validateManifest(duplicate)).toThrow("identificadores únicos");
   });
-  it("al navegar cierra la pregunta y reinicia los indicadores de la slide y el QR", () => {
+  it("al navegar mantiene las preguntas abiertas y reinicia los indicadores de la slide y el QR", () => {
     expect(
       applyPresenterAction(
         {
@@ -108,7 +108,7 @@ describe("manifiesto y estado de una presentación", () => {
       ),
     ).toMatchObject({
       activeSlideSlug: "workflow",
-      questionOpen: false,
+      questionOpen: true,
       showResults: false,
       qrVisible: false,
       projectionTheme: "light",
@@ -169,7 +169,7 @@ describe("manifiesto y estado de una presentación", () => {
     expect(moved.questionOpenedAt).toBe(11);
     expect(
       applyPresenterAction(
-        moved,
+        { ...moved, questionOpen: false },
         { ...open, slideSlug: "workflow" },
         12,
       ).questionOpenedAt,
@@ -310,7 +310,7 @@ describe("identidad, capacidades y votos", () => {
     expect(validateVote(session, "one", ["yes"]).optionIds).toEqual(["yes"]);
     expect(() =>
       validateVote({ ...session, questionOpen: false }, "one", ["yes"]),
-    ).toThrow("no ha abierto");
+    ).toThrow("cerró las preguntas");
   });
   it("acepta varias opciones válidas únicamente en preguntas múltiples", () => {
     expect(
@@ -320,9 +320,13 @@ describe("identidad, capacidades y votos", () => {
       ]).optionIds,
     ).toEqual(["code", "review"]);
   });
-  it("rechaza un voto enviado desde una slide desactualizada", () => {
-    expect(() => validateVote(session, "one", ["yes"], "workflow")).toThrow(
-      "La presentación avanzó",
+  it("acepta la pregunta de cualquier slide mientras las preguntas están abiertas", () => {
+    expect(validateVote(session, "one", ["code"], "workflow")).toMatchObject({
+      slideSlug: "workflow",
+      optionIds: ["code"],
+    });
+    expect(() => validateVote(session, "one", ["yes"], "closing")).toThrow(
+      "no tiene una pregunta",
     );
   });
 });
