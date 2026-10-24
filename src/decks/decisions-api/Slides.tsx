@@ -366,7 +366,7 @@ export function CincoPracticasSlide() {
           </E>
         </span>
       ))}
-      <Box x={5.25} y={86.5} w={90.62} h={4.78}>
+      <Box x={5.25} y={86.5} w={90.62} h={4.78} border={`0.08cqw solid ${FG}`}>
         <span className="fc-bar-text" style={{ fontSize: `${(21 / 12).toFixed(3)}cqw` }}>
           No se trata de escribir mejores prompts. Se trata de trabajar mejor.
         </span>
