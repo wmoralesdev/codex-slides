@@ -19,8 +19,22 @@ const WEB = "https://saulcalderon.com";
 /* Piezas                                                              */
 /* ------------------------------------------------------------------ */
 
-/** A real screenshot inside a minimal browser window. */
-function Shot({ src, url, alt, className = "", style }: { src: string; url?: string; alt: string; className?: string; style?: CSSProperties }) {
+/** A real screenshot (or a recording passed as children) inside a minimal browser window. */
+function Shot({
+  src,
+  url,
+  alt,
+  className = "",
+  style,
+  children,
+}: {
+  src?: string;
+  url?: string;
+  alt?: string;
+  className?: string;
+  style?: CSSProperties;
+  children?: ReactNode;
+}) {
   return (
     <figure className={`sd-shot ${className}`} style={style}>
       <div className="sd-shot-bar" aria-hidden="true">
@@ -29,7 +43,7 @@ function Shot({ src, url, alt, className = "", style }: { src: string; url?: str
         <i />
         {url && <span className="sd-shot-url">{url}</span>}
       </div>
-      <img src={src} alt={alt} draggable={false} />
+      {children ?? <img src={src} alt={alt} draggable={false} />}
     </figure>
   );
 }
@@ -194,14 +208,56 @@ export function NecesitasSlide() {
 }
 
 /* ------------------------------------------------------------------ */
-/* 06 · Paso 1 · Conectar                                              */
+/* 06 · Qué es Higgsfield                                              */
+/* ------------------------------------------------------------------ */
+
+export function HiggsfieldSlide() {
+  const usos = [
+    { tag: "Imagen", body: "GPT Image 2.5 para el retoque, outpaint y upscale.", color: orange },
+    { tag: "Video", body: "MiniMax H3, Kling y Seedance, todos con primer y último fotograma.", color: purple },
+    { tag: "Conexión", body: "Por MCP desde Codex, o con su CLI.", color: green },
+  ];
+  return (
+    <SlideFrame className="sd-paso sd-higgs">
+      <div className="sd-paso-text">
+        <Eyebrow>Herramienta · 0:30</Eyebrow>
+        <h2 className="dd-heading">¿Qué es Higgsfield?</h2>
+        <p className="dd-lead">
+          Una plataforma que reúne <strong>decenas de modelos de imagen, video y audio</strong> en un solo lugar. Elegís el modelo, subís tus fotos y pagás con
+          créditos.
+        </p>
+        <ul className="sd-higgs-usos" aria-label="Lo que usamos de Higgsfield en este proyecto">
+          {usos.map((u) => (
+            <li key={u.tag} style={{ "--kit": u.color } as CSSProperties}>
+              <span className="sd-kit-tag">{u.tag}</span>
+              <p>{u.body}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="sd-higgs-side">
+        <Shot url="higgsfield.ai" className="sd-higgs-shot">
+          <StageVideo
+            src={`${A}/higgsfield.mp4`}
+            poster={`${A}/higgsfield-poster.jpg`}
+            label="La sección de video de Higgsfield: Genjutsu toma el movimiento de un video y lo recrea con otros personajes"
+          />
+        </Shot>
+        <p className="sd-nota">En la grabación: Genjutsu toma el movimiento de un video y lo recrea con tus personajes, lugares o productos.</p>
+      </div>
+    </SlideFrame>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* 07 · Paso 1 · Conectar                                              */
 /* ------------------------------------------------------------------ */
 
 export function ConectarSlide() {
   return (
     <SlideFrame className="sd-paso sd-conectar">
       <div className="sd-paso-text">
-        <Eyebrow>Paso 1 de 5 · 1:00</Eyebrow>
+        <Eyebrow>Paso 1 de 5 · 0:30</Eyebrow>
         <h2 className="dd-heading">Conectá Higgsfield con Codex.</h2>
         <ol className="sd-lista">
           <li>
@@ -235,7 +291,7 @@ export function ConectarSlide() {
 }
 
 /* ------------------------------------------------------------------ */
-/* 07 · Paso 2 · Keyframes                                             */
+/* 08 · Paso 2 · Keyframes                                             */
 /* ------------------------------------------------------------------ */
 
 export function KeyframesSlide() {
@@ -273,7 +329,7 @@ export function KeyframesSlide() {
 }
 
 /* ------------------------------------------------------------------ */
-/* 08 · Paso 3 · Costo y prueba                                        */
+/* 09 · Paso 3 · Costo y prueba                                        */
 /* ------------------------------------------------------------------ */
 
 const modelos = [
@@ -313,7 +369,7 @@ export function CostoSlide() {
 }
 
 /* ------------------------------------------------------------------ */
-/* 09 · Paso 4 · Clips                                                 */
+/* 10 · Paso 4 · Clips                                                 */
 /* ------------------------------------------------------------------ */
 
 export function ClipsSlide() {
@@ -354,7 +410,7 @@ export function ClipsSlide() {
 }
 
 /* ------------------------------------------------------------------ */
-/* 10 · Paso 5 · El sitio                                              */
+/* 11 · Paso 5 · El sitio                                              */
 /* ------------------------------------------------------------------ */
 
 export function SitioSlide() {
@@ -392,7 +448,7 @@ export function SitioSlide() {
 }
 
 /* ------------------------------------------------------------------ */
-/* 11 · Demo                                                           */
+/* 12 · Demo                                                           */
 /* ------------------------------------------------------------------ */
 
 export function DemoSlide() {
@@ -417,7 +473,7 @@ export function DemoSlide() {
 }
 
 /* ------------------------------------------------------------------ */
-/* 12 · Números reales                                                 */
+/* 13 · Números reales                                                 */
 /* ------------------------------------------------------------------ */
 
 export function NumerosSlide() {
@@ -469,7 +525,7 @@ export function NumerosSlide() {
 }
 
 /* ------------------------------------------------------------------ */
-/* 13 · About Me                                                       */
+/* 14 · About Me                                                       */
 /* ------------------------------------------------------------------ */
 
 export function AboutSlide() {
