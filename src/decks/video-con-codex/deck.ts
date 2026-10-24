@@ -1,101 +1,217 @@
 import { speakers } from "../../devday/speakers";
 import { defineTalk } from "../kit/talk";
+import {
+  ALasDemosSlide,
+  AperturaSlide,
+  AplicarElCriterioSlide,
+  BibliotecaDeEfectosSlide,
+  CriterioEnArchivosSlide,
+  CuatroProblemasSlide,
+  DesafioSlide,
+  DondeEditaSlide,
+  EdicionComoCodigoSlide,
+  ElegirFotogramasSlide,
+  EscucharSlide,
+  FfmpegMideSlide,
+  FotosSueltasSlide,
+  GraciasSlide,
+  MapaDeSonidoSlide,
+  MovimientoSlide,
+  RegaloSlide,
+  SistemaCompletoSlide,
+  SureshotSlide,
+  TallerSlide,
+  TextoEnPantallaSlide,
+} from "./Slides";
 
 export const videoCodexDeck = defineTalk({
-  "slug": "video-con-codex",
-  "title": "De un video largo a un clip con Codex",
-  "description": "Usá Codex y herramientas de edición para elegir fragmentos, agregar subtítulos y preparar una versión vertical de un video.",
-  "topic": "Codex · Edición de video",
-  "speaker": speakers.rodrigo,
-  "accent": "#8a8d82",
-  "brief": {
-    "goal": "Transformá una grabación en un clip para compartir.",
-    "topics": [
-      "Elegir el mensaje y los fragmentos que lo cuentan.",
-      "Pedir cortes, subtítulos y un formato vertical.",
-      "Revisar ritmo, audio y texto antes de exportar."
+  slug: "video-con-codex",
+  title: "Cómo enseñarle a Codex a editar video",
+  description: "Un agente que edita video necesita ver, oír, tener dónde trabajar y conocer tu criterio. Recorremos cada problema con herramientas reales y cerramos con un video editado y verificado con ese mismo pipeline.",
+  topic: "Codex · Edición de video",
+  speaker: speakers.rodrigo,
+  accent: "#8a8d82",
+  coverComponent: AperturaSlide,
+  closingComponent: GraciasSlide,
+  brief: {
+    goal: "Qué necesita un agente para entender, construir y revisar una edición de video.",
+    topics: [
+      "Ver y oír: fotogramas, texto en pantalla, transcripción y mediciones de audio.",
+      "Dónde edita: la pantalla, un conector MCP o la edición escrita como código.",
+      "Criterio: reglas, skills y una wiki que el agente consulta antes de cortar.",
     ],
-    "demo": "Usar un video propio, preparar un clip vertical corto y pedir una corrección en lenguaje natural. Comparar el antes y el después.",
-    "takeaway": "Un encargo de edición que podés reutilizar con otro video.",
-    "preparation": [
-      "Usar material propio o autorizado y elegir los fragmentos antes de la charla.",
-      "Ensayar la herramienta real de edición, por ejemplo FFmpeg, y tener el video final de respaldo. Codex coordina esas herramientas; no presentar un editor nativo anunciado en DevDay.",
-      "Mantener los comandos fuera del recorrido principal; mostrar archivos, instrucciones y resultado.",
-      "Verificar subtítulos, encuadre, audio y exportación; no prometer tiempos de render ni resultados sin ensayar.",
-      "Preparar un cambio visible y sencillo para pedir en vivo: acortar el inicio o corregir un subtítulo."
-    ]
+    demo: "Un video que explica este pipeline, editado por Codex en Remotion y verificado con sureshot.",
+    takeaway: "Un render sin errores todavía puede tener cortes mal puestos: el agente edita, vos revisás el sentido y el ritmo.",
+    preparation: [
+      "Presentar la herramienta real (FFmpeg, Remotion, sureshot), no un editor nativo anunciado en DevDay.",
+      "Tener el video de la demo exportado como respaldo antes de subir al escenario.",
+      "No prometer resultados virales ni tiempos de render: los principios de la wiki son hipótesis editoriales.",
+      "Los cuadros marcados como «Ejemplo» o «Esquema» son ilustrativos, no mediciones.",
+    ],
   },
-  "openingQuestion": {
-    "id": "video-codex-experiencia",
-    "prompt": "¿Qué te cuesta más al editar un video?",
-    "type": "single",
-    "options": [
-      {
-        "id": "seleccionar",
-        "label": "Elegir qué dejar"
-      },
-      {
-        "id": "cortar",
-        "label": "Hacer los cortes"
-      },
-      {
-        "id": "subtitulos",
-        "label": "Agregar subtítulos"
-      },
-      {
-        "id": "empezar",
-        "label": "No sé por dónde empezar"
-      }
-    ]
+  openingQuestion: {
+    id: "video-codex-experiencia",
+    prompt: "¿Qué te cuesta más al editar un video?",
+    type: "single",
+    options: [
+      { id: "seleccionar", label: "Elegir qué dejar" },
+      { id: "cortar", label: "Hacer los cortes" },
+      { id: "subtitulos", label: "Agregar subtítulos" },
+      { id: "empezar", label: "No sé por dónde empezar" },
+    ],
   },
-  "outline": [
+  outline: [
     {
-      "slug": "el-material",
-      "title": "Empezá por lo que querés contar",
-      "kicker": "Contexto · 1:00",
-      "guide": {
-        "intro": "Definí para quién es el clip, dónde lo vas a compartir y qué idea querés que quede. Una grabación larga puede contener varios mensajes."
-      }
+      slug: "el-desafio",
+      title: "Editar no es solo cortar.",
+      kicker: "El desafío · 0:30",
+      component: DesafioSlide,
+      guide: { intro: "Antes de tocar la línea de tiempo, alguien mira, escucha y decide qué vale la pena contar. ¿Cómo hace eso un agente?" },
+      speakerNotes: { script: "Conectar con lo cotidiano: «Si le pido a alguien que edite una grabación de 40 minutos, esa persona la mira, escucha, decide qué dejar y recién ahí abre el editor.»", timing: "0:30", cues: ["El gráfico muestra exactamente eso: tres fragmentos útiles de una grabación larga que terminan en un clip corto. Anunciá las tres capacidades (percibir, ejecutar, decidir): son el mapa de toda la charla. No profundices todavía."] },
     },
     {
-      "slug": "el-encargo",
-      "title": "Un encargo claro para editar",
-      "kicker": "Práctica · 1:00",
-      "guide": {
-        "intro": "Indicá el material, los momentos útiles, la duración buscada y el formato. Los nombres de archivos ayudan a evitar confusiones."
-      }
+      slug: "cuatro-problemas",
+      title: "Para editar video, un agente tiene cuatro problemas.",
+      kicker: "El problema · 0:30",
+      component: CuatroProblemasSlide,
+      guide: { intro: "Los vamos a resolver uno por uno. Cada vez que uno quede resuelto, lo marcamos." },
+      speakerNotes: { script: "Esta es la columna vertebral de la charla. Presentá los cuatro problemas en una frase cada uno: el modelo es ciego al movimiento, es sordo, no tiene un lugar pensado para que edite y no conoce tu criterio.", timing: "0:30", cues: ["Avisá la mecánica: «Arriba a la derecha van a ver estas cuatro casillas. Cada vez que resolvamos uno, lo marcamos.» Así el público sabe siempre en qué parte estamos."] },
     },
     {
-      "slug": "herramientas",
-      "title": "Codex prepara el trabajo de edición",
-      "kicker": "Concepto · 1:30",
-      "guide": {
-        "intro": "Codex puede preparar instrucciones y ejecutar herramientas de edición configuradas. La herramienta procesa el video; vos revisás las decisiones creativas."
-      }
+      slug: "fotos-sueltas",
+      title: "GPT no ve un video. Ve fotos sueltas.",
+      kicker: "01 · Video · 0:45",
+      component: FotosSueltasSlide,
+      guide: { intro: "Le mandamos el video como una secuencia de imágenes. El movimiento hay que reconstruirlo entre una y la siguiente." },
+      speakerNotes: { script: "Acá va tu idea de «el modelo es ciego al movimiento», dicha con precisión: GPT sí ve imágenes, pero un video se lo mandamos como una secuencia de fotos sueltas, una imagen por fotograma.", timing: "0:45", cues: ["Números: 60 s a 30 FPS son 1,800 fotogramas. En GPT-5.5 cada imagen se cubre con parches de 32 × 32 px y se multiplica por 1.2: un fotograma 720p (1280 × 720) son 40 × 23 = 920 parches, o sea unos 1,100 tokens en detalle alto. Mandar los 30 FPS de un minuto: 1,800 × 1,104 ≈ 2 millones de tokens. Mandar 1 por segundo: 60 imágenes, unos 66 mil. En detalle bajo cada fotograma baja a unos 170 tokens, pero se pierde detalle.", "Por eso nadie le manda todos los fotogramas: hay que elegir cuáles, que es justo la siguiente diapositiva.", "Analogía del libro: es como hojear un libro leyendo una página de cada treinta. Rápido, pero el giro de la trama puede estar en la página que te saltaste."] },
     },
     {
-      "slug": "demo",
-      "title": "Demo: del original al clip",
-      "kicker": "Demo · 3:00",
-      "guide": {
-        "intro": "Vemos el video original y un primer corte vertical con subtítulos. Pedimos una corrección concreta y comparamos ambas versiones."
-      }
+      slug: "elegir-fotogramas",
+      title: "¿Qué fotogramas vale la pena mirar?",
+      kicker: "01 · Video · 0:40",
+      component: ElegirFotogramasSlide,
+      guide: { intro: "Muestrear a intervalos fijos es simple. Detectar cambios entre imágenes es más eficiente, aunque tampoco es infalible." },
+      speakerNotes: { script: "Interactivo: hacé clic en «Por cambio de escena» (o presioná la tecla E).", timing: "0:40", cues: ["Con muestreo fijo cada 2 segundos se miran 4 fotogramas y se pierde la mano en 00:03. Con detección de cambios, FFmpeg compara cada fotograma con el anterior y solo envía los que superan el umbral: 3 fotogramas y el evento queda adentro. Menos imágenes, mejor cobertura.", "Matiz honesto: la detección también falla con cambios graduales o con cámara en movimiento. En la práctica se combina muestreo, escenas, audio y verificación."] },
     },
     {
-      "slug": "revisar",
-      "title": "Mirá y escuchá el resultado",
-      "kicker": "Práctica · 1:30",
-      "guide": {
-        "intro": "Revisá que los cortes no cambien el sentido, que el encuadre funcione y que los subtítulos coincidan con el audio."
-      }
+      slug: "texto-en-pantalla",
+      title: "El texto en pantalla se lee aparte.",
+      kicker: "01 · Video · 0:35",
+      component: TextoEnPantallaSlide,
+      guide: { intro: "Un modelo que describe imágenes puede parafrasear un título. Tesseract, un OCR tradicional, copia el texto exacto." },
+      speakerNotes: { script: "Tercer componente de la visión: el texto que ya está en pantalla (títulos, subtítulos, precios, un llamado a la acción). Un modelo que describe imágenes puede resumirlo o cambiar una palabra. Un OCR solo copia las letras. Uso Tesseract: código abierto, corre en la computadora y lee español.", timing: "0:35", cues: ["La lógica importa más que el motor: no se leen todos los fotogramas. Se lee al inicio, justo después de cada corte (un instante después, para no agarrar la transición), cuando empieza o termina el movimiento y a mitad de un plano quieto. Si un fotograma es idéntico a uno ya leído, no se vuelve a leer.", "Para qué sirve al editar: no duplicar subtítulos que ya están en el video, saber cuándo aparece un título o un CTA, y no tapar texto con un gráfico nuevo."] },
     },
     {
-      "slug": "reutilizar",
-      "title": "Guardá tu receta de edición",
-      "kicker": "Cierre · 2:00",
-      "guide": {
-        "intro": "Conservá las instrucciones que funcionaron, el formato y una lista de revisión. Probá el mismo proceso con otro video antes de darlo por repetible."
-      }
-    }
-  ]
+      slug: "movimiento",
+      title: "Un fotograma describe. Una secuencia cuenta.",
+      kicker: "01 · Video · 0:30",
+      component: MovimientoSlide,
+      guide: { intro: "Para decidir dónde cortar, el agente necesita saber qué cambió y en qué orden." },
+      speakerNotes: { script: "Es como una foto de larga exposición: con varias posiciones en orden ya podemos contar una historia. Con una sola imagen solo sabemos que hay una pelota.", timing: "0:30", cues: ["Relacionalo con edición: el mejor punto de corte suele estar en un cambio (el impacto, un gesto, una palabra). Para encontrarlo, el agente necesita la secuencia, no la foto. No afirmes que el movimiento siempre se puede inferir de pocos fotogramas."] },
+    },
+    {
+      slug: "escuchar",
+      title: "Transcribir no es escuchar.",
+      kicker: "02 · Audio · 0:45",
+      component: EscucharSlide,
+      guide: { intro: "Una transcripción recupera las palabras. El resto del sonido también dice cosas." },
+      speakerNotes: { script: "Ejemplo: en el audio alguien dice «Necesitamos cambiar esto» y atrás cantan pájaros. La transcripción nos deja las palabras con su tiempo. ¿Quién nos dice que la persona suena tensa o que hay pájaros?", timing: "0:45", cues: ["Dos capacidades distintas. Transcripción: Whisper, Moonshine y NVIDIA Parakeet son modelos abiertos que corren localmente, sin pagar por token; Parakeet v3 incluye español y marcas de tiempo por palabra. Comprensión sonora: modelos multimodales como Gemini interpretan tono, eventos y música.", "Precisión: muchos agentes de código trabajan con texto e imágenes, por eso el audio les llega transcrito. Ya existen modelos que procesan audio directamente. Lo que devuelve la comprensión es una interpretación y se verifica."] },
+    },
+    {
+      slug: "ffmpeg-mide",
+      title: "FFmpeg no escucha. Mide.",
+      kicker: "02 · Audio · 0:30",
+      component: FfmpegMideSlide,
+      guide: { intro: "Como un técnico de sonido sin oídos: no sabe qué suena, pero sabe con precisión cuándo, cuánto y dónde." },
+      speakerNotes: { script: "Tu analogía: FFmpeg es un técnico de sonido que entiende el audio con precisión matemática, pero no tiene oídos. No sabe si es un pájaro o un aplauso; sí sabe exactamente cuándo baja el volumen y por cuánto.", timing: "0:30", cues: ["Aclaración: FFmpeg no es una librería de Python. Es una herramienta multimedia de línea de comandos que podés llamar desde la terminal o desde Python. El agente la ejecuta y lee la salida como texto: eso sí lo entiende perfecto.", "Tres filtros reales: silencedetect (silencios), ebur128 (volumen percibido) y select con scene (el mismo de la diapositiva anterior)."] },
+    },
+    {
+      slug: "mapa-de-sonido",
+      title: "El sonido también tiene una línea de tiempo.",
+      kicker: "02 · Audio · 0:35",
+      component: MapaDeSonidoSlide,
+      guide: { intro: "Juntando transcripción, mediciones y comprensión, cada evento queda con su marca de tiempo." },
+      speakerNotes: { script: "Tres pistas de un mismo archivo: la voz viene de la transcripción, el ambiente de la comprensión multimodal y el pulso de la música de mediciones sobre la señal.", timing: "0:35", cues: ["El punto: ahora el agente tiene una lista de eventos con tiempo. Eso ya se puede convertir en decisiones: dónde cortar, cuándo poner un subtítulo, en qué golpe hacer una transición.", "Ninguna fuente sola alcanza: un espectrograma no te dice que son pájaros y una transcripción no te dice si alguien suena molesto."] },
+    },
+    {
+      slug: "donde-edita",
+      title: "¿Dónde edita un agente?",
+      kicker: "03 · Entorno de edición · 0:50",
+      component: DondeEditaSlide,
+      guide: { intro: "Puede usar la pantalla como una persona, conectarse a un editor o escribir la edición como código." },
+      speakerNotes: { script: "Tres caminos. Uno: que el modelo use la computadora como nosotros, con mouse y teclado. Funciona, pero las interfaces están pensadas para humanos.", timing: "0:50", cues: ["Dos: MCP. Existen servidores comunitarios para CapCut (basados en VectCutAPI, generan borradores del proyecto). Para Premiere también hay intentos de la comunidad; no prometas conectores oficiales.", "Tres, el que uso yo: aprovechar la capacidad más desarrollada de los modelos, programar. Remotion describe el video con React; HyperFrames, de HeyGen, con HTML, CSS y JavaScript. Ambos renderizan a MP4 de forma determinista."] },
+    },
+    {
+      slug: "edicion-como-codigo",
+      title: "Cada corte es una línea que se puede revisar.",
+      kicker: "03 · Entorno de edición · 0:45",
+      component: EdicionComoCodigoSlide,
+      guide: { intro: "En Remotion un video es un componente de React. Tiempos, capas y efectos quedan escritos." },
+      speakerNotes: { script: "Los colores conectan cada bloque de código con su pista. Lo importante: el agente no arrastra clips, edita números. Y eso se puede revisar como cualquier otro cambio de código.", timing: "0:45", cues: ["Los números son cuadros: a 30 FPS, 150 cuadros son 5 segundos. trimBefore salta los primeros 1440 cuadros (48 s) del video original. Reencuadre y Subtitulo son componentes propios del proyecto, no de Remotion.", "Remotion arma escenas y animaciones; FFmpeg prepara y procesa el material. Que compile no significa que el corte sea bueno: para eso vienen el criterio y la verificación."] },
+    },
+    {
+      slug: "el-taller",
+      title: "El agente necesita un taller.",
+      kicker: "03 · Entorno de edición · 0:40",
+      component: TallerSlide,
+      guide: { intro: "Reglas, procedimientos y memoria guardados en archivos." },
+      speakerNotes: { script: "Esta es la estructura real de mi laboratorio de Remotion, simplificada. AGENTS.md instruye al agente; cada video vive en su carpeta con PROJECT.md (brief, decisiones, memoria), la composición, sus assets, temporales en _scratch y lo exportado en renders.", timing: "0:40", cues: ["Diferencia clave: tener una herramienta no es lo mismo que tener un procedimiento consistente para usarla. Eso son las skills. Y no son lo mismo que la memoria de un proyecto."] },
+    },
+    {
+      slug: "biblioteca-de-efectos",
+      title: "Cada sonido tiene una función.",
+      kicker: "03 · Entorno de edición · 0:35",
+      component: BibliotecaDeEfectosSlide,
+      guide: { intro: "Efectos con roles para que el agente sepa qué usar y dónde. Si hace falta narrar, la voz también se genera." },
+      speakerNotes: { script: "En el laboratorio guardo efectos con nombres descriptivos, un rol y una evaluación hecha escuchando. Una skill le dice al agente que consulte esta biblioteca antes de buscar o generar algo nuevo.", timing: "0:35", cues: ["Los nombres son los reales de mi biblioteca, cada uno con una nota de 0 a 5 que le puse escuchando. El clack es el sonido de firma; el barrido lo limito a una o dos apariciones por video porque pierde fuerza si se repite.", "Voz sintética: la genero por escena con Gemini API o con ElevenLabs, que son las que uso. En Gemini la voz se dirige con lenguaje natural («decilo con calma, ritmo pausado») y soporta español. ElevenLabs tiene un endpoint que devuelve el audio con el tiempo de cada carácter: con eso los subtítulos quedan sincronizados sin adivinar. En el demo de sureshot cada escena tiene su línea de ElevenLabs y entra 6 cuadros después del corte.", "Lo importante: no todo texto necesita un sonido. El objetivo no es poner muchos efectos, sino que cada uno refuerce algo que pasa en pantalla. La validación final es humana: hay que escucharlo."] },
+    },
+    {
+      slug: "criterio-en-archivos",
+      title: "El criterio también puede vivir en archivos.",
+      kicker: "04 · Contexto · 1:05",
+      component: CriterioEnArchivosSlide,
+      guide: { intro: "Una wiki con índice deja que el agente lea solo lo que necesita para esta pieza." },
+      speakerNotes: { script: "Qué es una wiki basada en archivos: un índice que apunta a documentos, que a su vez apuntan a otros. Un árbol. El agente lee el índice y baja solo por las ramas que le sirven.", timing: "1:05", cues: ["Ejemplo de empresa: si pido un video sobre mis servicios, el índice de conocimiento de la empresa lleva a servicios.md, que enlaza precios y el detalle de cada servicio. No tengo que pegarle todo eso en el prompt.", "Tres aprendizajes de mi wiki de creación de contenido: el gancho como hipótesis, subtítulos con jerarquía y «retención sin relevancia no crea demanda». No digas que garantiza viralidad.", "El prompt sugerido es para que se lo lleven: no le explica la wiki al agente, solo le dice dónde empezar a leer y que deje constancia de lo que usó.", "Cierre: la wiki guarda conocimiento transferible; PROJECT.md guarda el contexto de una edición puntual."] },
+    },
+    {
+      slug: "aplicar-el-criterio",
+      title: "La IA puede animar cualquier palabra. ¿Cuál debería?",
+      kicker: "04 · Contexto · 0:45",
+      component: AplicarElCriterioSlide,
+      guide: { intro: "La IA puede animar cualquier palabra. ¿Cuál debería?" },
+      speakerNotes: { script: "Preguntale al público: ¿cuál se entiende mejor a primera vista? Los dos cuadros son una ilustración, no el resultado de una prueba A/B.", timing: "0:45", cues: ["La capacidad técnica de animar cualquier palabra es la misma en los dos. Lo que cambia es la decisión: qué palabra carga el mensaje. Ese criterio se puede escribir en la wiki y el agente lo consulta antes de animar."] },
+    },
+    {
+      slug: "sistema-completo",
+      title: "Todas las piezas, un flujo de trabajo.",
+      kicker: "Todo junto · 0:40",
+      component: SistemaCompletoSlide,
+      guide: { intro: "Codex coordina herramientas y contexto. La persona revisa el sentido y el ritmo." },
+      speakerNotes: { script: "Las cuatro casillas ya están marcadas: video, audio, entorno y contexto. Ahora se ven juntas.", timing: "0:40", cues: ["Recorré el flujo en una frase por paso: ingiero el material, lo entiendo con fotogramas y audio, decido con contexto (wiki, skills, memoria del proyecto), produzco con Remotion y FFmpeg, y verifico.", "La flecha de regreso es la parte importante: lo que encuentra la verificación vuelve a la decisión. La cara gris del paso 5 es la mía, a propósito: la revisión humana sigue siendo necesaria para el sentido, el ritmo y la calidad.", "Ejemplo real: renders que terminaban sin errores y tenían tramos vacíos o audio desfasado. Por eso el sistema revisa fotogramas y sincronía. Evitá saturar con siglas como RMS o SSIM.", "El paso 2 y la verificación del paso 5 usan la misma herramienta, sureshot. La siguiente diapositiva la abre."] },
+    },
+    {
+      slug: "sureshot",
+      title: "Todo esto ya es una herramienta.",
+      kicker: "Por dentro · 0:45",
+      component: SureshotSlide,
+      guide: { intro: "sureshot corre estos pasos sobre un video y guarda cada evento en una sola línea de tiempo. No interpreta: deja evidencia para que el agente decida." },
+      speakerNotes: { script: "Las capas 01 y 02 de la charla ya viven en una herramienta propia, sureshot. Es la que va a correr en el video del demo.", timing: "0:45", cues: ["Orden real del análisis: identifica el archivo (ffprobe y un hash), busca cortes de escena con FFmpeg (umbral 0.4, más estricto que el 0.3 del ejemplo anterior), pantallas en negro y congeladas; mide movimiento comparando un fotograma por segundo reducido a 160 × 90 en gris; mide silencios (−30 dB, medio segundo) y cambios de energía; transcribe con faster-whisper con tiempo por palabra; cruza audio y video (por ejemplo, silencio mientras hay mucho movimiento) y recién al final decide cuántos fotogramas leer con OCR según qué tan denso es el video.", "Las líneas punteadas son la idea clave: el OCR lee justo después de cada corte. Los eventos baratos (FFmpeg) deciden dónde gastar los caros (modelos).", "Todo queda en una base SQLite. El agente no relee el video: pide el mapa, abre un tramo con inspect o exporta un reporte. La interpretación (gancho, ritmo, CTA) la hace Codex después, separada de la evidencia."] },
+    },
+    {
+      slug: "regalo",
+      title: "Todo este sistema, disponible para ti.",
+      kicker: "Regalo · opcional",
+      component: RegaloSlide,
+      guide: { intro: "El repositorio con todo el sistema: github.com/RoderickGrc/agentic-edition-studio." },
+      speakerNotes: { script: "Por si hace falta: el mismo QR de la slide anterior, a pantalla grande. Dejalo unos segundos para que lo escaneen desde el fondo.", timing: "Opcional", cues: ["Si no hay tiempo, saltala: el QR ya estuvo en la slide de sureshot."] },
+    },
+    {
+      slug: "a-las-demos",
+      title: "Ya tiene ojos, oídos y herramientas. Veamos el pipeline completo.",
+      kicker: "El sistema en la práctica · 0:40",
+      component: ALasDemosSlide,
+      guide: { intro: "Ya tiene ojos, oídos y herramientas. Veamos el pipeline completo en un reel de 40 segundos, editado y verificado con él." },
+      speakerNotes: { script: "Transición breve: «Ya vimos cómo un agente entiende escenas, texto y audio, edita con código, usa recursos y aplica criterio. Este reel explica el pipeline y se hizo con él: Codex lo editó en Remotion y sureshot lo verificó.»", timing: "0:40", cues: ["Hacé clic en «Reproducir con sonido». Barra espaciadora pausa y reanuda; las flechas siguen cambiando de slide.", "El video se reproduce en la pantalla donde hacés clic: si proyectás otra ventana, dale play ahí.", "El archivo está en public/talks/video-con-codex/reel.mp4 (render v2 de remotion-lab, 40.7 s)."] },
+    },
+  ],
 });

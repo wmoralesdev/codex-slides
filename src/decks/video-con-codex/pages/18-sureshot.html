@@ -1,0 +1,27 @@
+<p class="eyebrow">Por dentro · 0:45</p>
+  <h2 class="heading">Todo esto ya es una herramienta.</h2>
+  <p class="lead"><strong>sureshot</strong> corre estos pasos sobre un video y guarda cada evento en una sola línea de tiempo. No interpreta: deja evidencia para que el agente decida.</p>
+  <div class="stage">
+    <div class="ss">
+      <div>
+        <div class="ss-head"><b>Un video de 12 s, cinco capas</b><code>sureshot.py analyze video.mp4 --stt --ocr</code></div>
+        <div class="ss-ruler"><span></span><div class="lane"><span style="left:0">00s</span><span style="left:16.67%">02s</span><span style="left:33.33%">04s</span><span style="left:50%">06s</span><span style="left:66.67%">08s</span><span style="left:83.33%">10s</span><span style="left:100%">12s</span></div></div>
+        <div class="ss-pair">
+          <div class="ss-row"><b>Estructura<small>scene &gt; 0.4</small></b><div class="lane"><i class="cut" style="--a:3"></i><i class="cut" style="--a:6.8"></i><i class="cut" style="--a:9.6"></i></div></div>
+          <div class="ss-row"><b>Texto<small>tesseract</small></b><div class="lane"><span class="rd" style="--a:0.05">«Cómo editar con IA»</span><span class="rd" style="--a:3.15">«3 errores comunes»</span><span class="rd none" style="--a:6.95">NO_TEXT</span><span class="rd" style="--a:9.75">«Error 1»</span></div></div>
+          <i class="ss-guide" style="--a:3"></i><i class="ss-guide" style="--a:6.8"></i><i class="ss-guide" style="--a:9.6"></i>
+        </div>
+        <div class="ss-row"><b>Movimiento<small>1 FPS · 160×90</small></b><div class="lane"><span class="sp hot" style="--a:3;--b:5.6">alto</span><span class="sp calm" style="--a:6.8;--b:9.6">quieto</span></div></div>
+        <div class="ss-row"><b>Audio<small>silencedetect</small></b><div class="lane"><span class="sp sil" style="--a:4.4;--b:5.8">1.4 s</span><span class="sp hot" style="--a:9.6;--b:11.9">sube la energía</span></div></div>
+        <div class="ss-row"><b>Voz<small>faster-whisper</small></b><div class="lane"><span class="sp voice" style="--a:.3;--b:4.3">Hoy no vamos a escribir prompts</span><span class="sp voice" style="--a:5.9;--b:9.4">vamos a darle ojos y oídos</span><span class="sp voice" style="--a:9.8;--b:11.8">a un agente.</span></div></div>
+      </div>
+      <ol class="ss-out">
+        <li><code>timeline.sqlite</code><span>Las cinco capas, un solo reloj.</span></li>
+        <li><code>view --map</code><span>Dónde hay actividad, sin releer todo.</span></li>
+        <li><code>inspect 00:03-00:05</code><span>Fotogramas solo de ese tramo.</span></li>
+        <li><code>report</code><span>Evidencia, métricas y procedencia en YAML.</span></li>
+        <li class="agent"><span class="face" data-face="squeeze blue"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><defs><clipPath id="vc-fc11"><circle cx="50" cy="50" r="50"></circle></clipPath></defs><circle cx="50" cy="50" r="50" fill="#0066ff"></circle><g clip-path="url(#vc-fc11)"><g transform="translate(50.00 50.00) rotate(0) scale(1) translate(-50 -50)" fill="#0b0b0a" color="#0b0b0a"><path d="M18 40L39 50L18 60M82 40L61 50L82 60" fill="none" stroke="currentColor" stroke-width="5.8" stroke-linecap="butt" stroke-linejoin="miter"></path></g></g></svg></span><span><b>Codex</b> interpreta y decide, citando tiempos.</span></li>
+      </ol>
+    </div>
+  </div>
+<div class="trk" aria-label="Progreso de los cuatro problemas"><span class="done"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></i>Video <small>· fotogramas y texto</small></span><span class="done"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></i>Audio <small>· transcribir y medir</small></span><span class="done"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></i>Entorno <small>· código y taller</small></span><span class="done"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></i>Contexto <small>· wiki en archivos</small></span></div>
