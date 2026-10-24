@@ -692,3 +692,97 @@
   font-size: 1.15cqw;
   text-align: center;
 }
+
+/* ---------- 13 · About Me ---------- */
+.sd-about .dd-display {
+  font-size: 5.6cqw;
+}
+.sd-about-roles {
+  display: grid;
+  gap: 0.4cqw;
+  margin: 1.6cqw 0 0 !important;
+  padding: 0;
+  list-style: none;
+  color: var(--slide-muted);
+  font-size: 1.6cqw;
+  line-height: 1.35;
+}
+.sd-about-roles li:first-child {
+  color: var(--slide-fg);
+  font-weight: 550;
+}
+.sd-about-links {
+  display: flex;
+  align-items: flex-end;
+  gap: 2.6cqw;
+  margin-top: 2.6cqw;
+}
+.sd-about-qr {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.2cqw;
+}
+.sd-about-qr svg {
+  width: 6.4cqw;
+  height: 6.4cqw;
+  padding: 0.6cqw;
+  border-radius: var(--dd-radius);
+  background: #fff;
+  box-shadow: 0 0 0 0.08cqw var(--slide-border);
+}
+.sd-about-qr--main svg {
+  width: 10cqw;
+  height: 10cqw;
+  padding: 0.8cqw;
+}
+.sd-about-qr span {
+  display: grid;
+  gap: 0.2cqw;
+  color: var(--slide-muted);
+  font-size: 1.15cqw;
+}
+.sd-about-qr b {
+  color: var(--slide-fg);
+  font-size: 1.5cqw;
+  font-weight: 620;
+}
+.sd-about-qr--main b {
+  color: var(--slide-blue);
+  font-size: 2.2cqw;
+  letter-spacing: -0.02em;
+}
+.sd-about-social {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6cqw 2cqw;
+  margin-top: 1.8cqw !important;
+  color: var(--slide-muted);
+  font-size: 1.2cqw;
+}
+.sd-about-social b {
+  color: var(--slide-fg);
+  font-weight: 600;
+}
+.sd-about-ailabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6cqw;
+}
+.sd-about-ailabs-logo {
+  width: 6.4cqw; /* the logo images fill the wrapper's width (4:1) */
+}
+/* The portrait has its own dark background: it fills the badge instead of sitting on the canvas. */
+.sd-about-badge {
+  width: 28cqw;
+  height: 36cqw;
+  background: #1a1a1a;
+}
+.sd-about-badge .dd-badge-photo {
+  left: 0;
+  width: 100%;
+  height: 100%;
+  translate: none;
+  object-fit: cover;
+  object-position: 50% 30%;
+}

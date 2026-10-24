@@ -1,14 +1,19 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { CodexWordmark } from "../../devday/Brand";
+import { AiLabsLogo, CodexWordmark } from "../../devday/Brand";
+import { DEVDAY_EVENT } from "../../devday/event";
+import { Mark } from "../../devday/Face";
 import { FACE_PALETTE } from "../../devday/faces";
-import { Eyebrow, Pill, SlideFrame } from "../kit/layouts";
+import { speakers } from "../../devday/speakers";
+import { Eyebrow, Pill, SlideFace, SlideFrame } from "../kit/layouts";
 import "./sitios.css";
 
 const { blue, green, orange, purple, charcoal } = FACE_PALETTE;
 const A = "/talks/sitios-dinamicos";
 const SITIO = "https://rancho-varadero.vercel.app";
 const GUIA = "https://github.com/saulcalderon/rancho-varadero/blob/main/GUIA.md";
+const LINKEDIN = "https://www.linkedin.com/in/saul-calderon/";
+const WEB = "https://saulcalderon.com";
 
 /* ------------------------------------------------------------------ */
 /* Piezas                                                              */
@@ -419,7 +424,7 @@ export function NumerosSlide() {
   ];
   return (
     <SlideFrame className="sd-numeros">
-      <Eyebrow>Resultados · 1:00</Eyebrow>
+      <Eyebrow>Resultados · 0:30</Eyebrow>
       <h2 className="dd-heading">Lo que costó, de verdad.</h2>
       <div className="sd-numeros-body">
         <div className="sd-cifras">
@@ -452,6 +457,68 @@ export function NumerosSlide() {
           <QRCodeSVG value={GUIA} size={512} level="M" marginSize={0} bgColor="#ffffff" fgColor="#171717" title="Abrir la guía paso a paso" />
           <span>La guía con todos los prompts</span>
         </div>
+      </div>
+    </SlideFrame>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* 13 · About Me                                                       */
+/* ------------------------------------------------------------------ */
+
+export function AboutSlide() {
+  const { saul } = speakers;
+  return (
+    <SlideFrame className="dd-speaker sd-about">
+      <div className="dd-speaker-text">
+        <Eyebrow>About Me · 0:30</Eyebrow>
+        <h1 className="dd-display">
+          Saul
+          <br />
+          Calderon
+        </h1>
+        <ul className="sd-about-roles">
+          <li>AI Product Engineer at an LA startup</li>
+          <li>SpaceX AI Ambassador</li>
+        </ul>
+        <div className="sd-about-links">
+          <div className="sd-about-qr sd-about-qr--main">
+            <QRCodeSVG value={LINKEDIN} size={512} level="M" marginSize={0} bgColor="#ffffff" fgColor="#171717" title="Abrir el LinkedIn de Saul Calderon" />
+            <span>
+              <b>LinkedIn</b>
+              linkedin.com/in/saul-calderon
+            </span>
+          </div>
+          <div className="sd-about-qr">
+            <QRCodeSVG value={WEB} size={512} level="M" marginSize={0} bgColor="#ffffff" fgColor="#171717" title="Abrir saulcalderon.com" />
+            <span>
+              <b>Web</b>
+              saulcalderon.com
+            </span>
+          </div>
+        </div>
+        <p className="sd-about-social">
+          <span>
+            Instagram <b>@saul_calderon14</b>
+          </span>
+          <span className="sd-about-ailabs">
+            <AiLabsLogo className="sd-about-ailabs-logo" /> <b>@ailabs_sv</b>
+          </span>
+        </p>
+      </div>
+      <div className="dd-badge dd-badge--photo sd-about-badge">
+        <img className="dd-badge-photo" src={saul.photo} alt={`Retrato de ${saul.name}`} draggable={false} />
+        <span className="dd-badge-mark dd-badge-mark--heart" aria-hidden="true">
+          <Mark kind="heart" color={blue} />
+        </span>
+        <span className="dd-badge-mark dd-badge-mark--exclaim" aria-hidden="true">
+          <Mark kind="exclaim" color={green} />
+        </span>
+        <SlideFace face={saul.face} size={7} className="dd-badge-face" />
+        <span className="dd-badge-tag">
+          <span>Speaker</span>
+          {DEVDAY_EVENT.date}
+        </span>
       </div>
     </SlideFrame>
   );

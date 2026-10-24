@@ -27,7 +27,7 @@ Sin `VITE_CONVEX_URL` aparece **«No ha sido configurado Convex»**: el modo loc
 | De una idea a algo que funciona con Codex | `codex-en-la-nube` | Walter Morales | 10 |
 | Notion × Codex: de tus notas al trabajo hecho | `notion-codex` | Daniela Huezo | 10 |
 | De un video largo a un clip con Codex | `video-con-codex` | Rodrigo Garciaguirre | 10 |
-| Generación de sitios web dinámicos con Codex y Higgsfield | `sitios-dinamicos` | Saul Calderon | 14 |
+| Generación de sitios web dinámicos con Codex y Higgsfield | `sitios-dinamicos` | Saul Calderon | 15 |
 | ¿Qué hace AI-native a una empresa? | `agents-api` | Fernando Borea | 16 |
 | AI Coding | `decisions-api` | Frank Calderon | 15 |
 

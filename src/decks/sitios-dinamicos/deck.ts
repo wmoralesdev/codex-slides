@@ -1,6 +1,7 @@
 import { speakers } from "../../devday/speakers";
 import { defineTalk } from "../kit/talk";
 import {
+  AboutSlide,
   AntesDespuesSlide,
   ClipsSlide,
   ConectarSlide,
@@ -208,7 +209,7 @@ export const sitiosDinamicosDeck = defineTalk({
     {
       slug: "numeros-reales",
       title: "Lo que costó, de verdad",
-      kicker: "Resultados · 1:00",
+      kicker: "Resultados · 0:30",
       component: NumerosSlide,
       guide: {
         intro:
@@ -218,7 +219,26 @@ export const sitiosDinamicosDeck = defineTalk({
       },
       speakerNotes: {
         script: "Leé los tres números grandes. Contá el error de los 256 créditos con humor. El de iPhone es el más útil: Safari no muestra un video en pausa que nunca se reprodujo. Cerrá con el QR a la guía.",
-        timing: "1:00",
+        timing: "0:30",
+      },
+    },
+    {
+      slug: "about-me",
+      title: "About Me",
+      kicker: "About Me · 0:30",
+      component: AboutSlide,
+      guide: {
+        intro: "Saul Calderon es AI Product Engineer en una startup de Los Ángeles y SpaceX AI Ambassador. Donde más publica es en LinkedIn.",
+        sections: [
+          { title: "LinkedIn", body: "linkedin.com/in/saul-calderon" },
+          { title: "Web", body: "saulcalderon.com" },
+          { title: "Instagram", body: "@saul_calderon14 · Ai Labs: @ailabs_sv" },
+        ],
+        takeaway: "Escaneá el QR de LinkedIn y seguimos la conversación ahí.",
+      },
+      speakerNotes: {
+        script: "Presentate en una frase y señalá el QR de LinkedIn. El de la web abre saulcalderon.com: confirmá que esté publicada antes de la charla.",
+        timing: "0:30",
       },
     },
   ],
