@@ -206,12 +206,14 @@ function PauseVideo({ id, label }: { id: string; label: string }) {
   );
 }
 
-/** Project name alone, shown right before its demo video. */
-export function makePauseTitleSlide(project: string) {
+/** Project name and who built it, shown right before its demo video. */
+export function makePauseTitleSlide(project: string, author?: string) {
   function PauseTitleSlide() {
     return (
       <SlideFrame className="ev-pause-title" footer={false}>
+        <Eyebrow>Proyecto de la comunidad</Eyebrow>
         <h1 className="dd-display">{project}</h1>
+        {author && <p className="ev-pause-author">{author}</p>}
       </SlideFrame>
     );
   }

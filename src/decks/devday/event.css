@@ -354,7 +354,14 @@
 }
 .ev-pause-title .dd-display {
   max-width: 80cqw;
+  margin: 1.4cqw 0;
   font-size: 8cqw;
+}
+.ev-pause-author {
+  margin: 0;
+  color: var(--slide-muted);
+  font-size: 2.2cqw;
+  font-weight: 500;
 }
 
 /* Pauses · community demo video */

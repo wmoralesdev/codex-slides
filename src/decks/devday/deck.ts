@@ -71,7 +71,7 @@ const pause = (slug: string, title: string): SlideDefinition[] =>
         slug: slugAt(n),
         title: `Pausa · ${demo.project}`,
         kicker: "Demo de la comunidad",
-        component: makePauseTitleSlide(demo.project),
+        component: makePauseTitleSlide(demo.project, demo.author),
         guide: { intro },
         speakerNotes: { script: `Presentá ${demo.project}${by}. El video está en la slide siguiente.`, timing: "Fuera del tiempo de charla" },
       },
