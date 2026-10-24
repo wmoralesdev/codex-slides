@@ -31,7 +31,8 @@ export const sitiosDinamicosDeck = defineTalk({
     demo: "Rancho Varadero, un rancho de playa real en Playa El Amatal: el sitio básico y la versión con recorrido, publicados en rancho-varadero.vercel.app.",
     takeaway: "Las fotos y los clips son el trabajo; el código lo escribe Codex.",
     preparation: [
-      "Pestañas abiertas antes de empezar: rancho-varadero.vercel.app/antes y rancho-varadero.vercel.app (el recorrido avanza con ↓ o espacio, 6 s por tramo).",
+      "Pestañas abiertas antes de empezar: rancho-varadero.vercel.app/antes y rancho-varadero.vercel.app. Abrí el recorrido un minuto antes: descarga los clips en 2K (unos 70 MB) y muestra «Cargando el recorrido · n/6».",
+      "El scroll del sitio es libre. Para avanzar con ↓ o espacio a 6 s por tramo, en esa pestaña entrá a rancho-varadero.vercel.app/opciones, elegí «Guiado toma a toma» y volvé a /: queda activo en esa pestaña.",
       "Respaldo: la slide de demo tiene el recorrido grabado; reproducilo si falla el wifi.",
       "Rancho Varadero es un negocio real (Alquileres MM) y hay permiso para mostrarlo. No mencionar precios del rancho.",
       "Las cifras de créditos son las reales del proyecto (research/rancho-varadero-costs.md). Los 256 créditos de Seedance fueron dos renders lanzados por accidente. Dólares calculados con el plan Plus de Higgsfield: US$49 por 1,000 créditos al mes (página de precios, 24 oct 2026).",
@@ -73,7 +74,7 @@ export const sitiosDinamicosDeck = defineTalk({
       component: QueEsSlide,
       guide: {
         intro:
-          "Siete fotos son las paradas del recorrido. Seis clips generados con IA conectan cada parada con la siguiente. Al hacer scroll, el sitio adelanta o retrocede el video, como en las páginas de producto de Apple.",
+          "Siete fotos son las tomas sin movimiento del recorrido. Seis clips generados con IA conectan cada toma con la siguiente. Al hacer scroll, el sitio adelanta o retrocede el video, como en las páginas de producto de Apple.",
         sections: [{ title: "La regla", body: "Cada clip empieza exactamente donde termina el anterior, así el recorrido se ve como una sola toma." }],
         takeaway: "Scroll hacia abajo, la cámara avanza. Scroll hacia arriba, retrocede.",
       },
@@ -125,7 +126,7 @@ export const sitiosDinamicosDeck = defineTalk({
         intro:
           "Elegí las fotos y ponelas en el orden del recorrido. Llevá todas a 16:9 (recorte o outpaint), subiles la resolución y retocalas con el mismo prompt para que tengan la misma luz.",
         sections: [
-          { title: "Lo que usamos", body: "8 fotos → 7 paradas · outpaint en 2 · upscale · retoque con GPT Image 2.5." },
+          { title: "Lo que usamos", body: "8 fotos → 7 tomas sin movimiento · outpaint en 2 · upscale · retoque con GPT Image 2.5." },
           { title: "Por qué importa", body: "Los clips heredan la luz y la resolución de estas imágenes." },
         ],
         takeaway: "Imágenes parejas, recorrido parejo.",
@@ -179,7 +180,7 @@ export const sitiosDinamicosDeck = defineTalk({
       guide: {
         intro:
           "Con landing-page-design, Codex primero pregunta: qué se ofrece, para quién, un solo botón de acción y solo datos reales. Con scroll-world conecta los clips al scroll, sin generar nada nuevo.",
-        sections: [{ title: "Lo que entrega", body: "Paradas con texto, versión móvil, español e inglés, reserva por WhatsApp y un respaldo con fotos para quien prefiere menos movimiento." }],
+        sections: [{ title: "Lo que entrega", body: "Tomas estáticas con texto, español e inglés, reserva por WhatsApp, clips en 2K para escritorio y 720p para teléfono con aviso de carga, y un respaldo con fotos para quien prefiere menos movimiento." }],
         takeaway: "Los videos ya existen: el agente solo los conecta.",
       },
       speakerNotes: {
@@ -199,7 +200,7 @@ export const sitiosDinamicosDeck = defineTalk({
         takeaway: "Probalo ahora con el QR.",
       },
       speakerNotes: {
-        script: "Cambiá al navegador: primero /antes, después el recorrido con ↓. Si falla la red, el video de la slide es el respaldo.",
+        script: "Cambiá al navegador: primero /antes, después el recorrido con el scroll (o con ↓ si activaste el modo guiado). Si falla la red, el video de la slide es el respaldo.",
         timing: "1:30",
         interaction: "Invitar a escanear el QR.",
       },
@@ -212,11 +213,11 @@ export const sitiosDinamicosDeck = defineTalk({
       guide: {
         intro:
           "El plan era gastar unos 218 créditos (≈ US$11). Se gastaron 473.75 (≈ US$23): 256 fueron dos renders de Seedance lanzados por accidente. Los seis clips con MiniMax H3 costaron 96 créditos, unos US$4.70.",
-        sections: [{ title: "Errores que conviene evitar", body: "Un clip con un corte brusco · modelos que agregan audio · fotos pálidas · el recorte en móvil." }],
+        sections: [{ title: "Errores que conviene evitar", body: "Un clip con un corte brusco · modelos que agregan audio · videos que no aparecían en iPhone · mucho peso para datos móviles · fotos pálidas." }],
         takeaway: "La guía completa, con todos los prompts, está en el repositorio.",
       },
       speakerNotes: {
-        script: "Leé los tres números grandes. Contá el error de los 256 créditos con humor. Cerrá con el QR a la guía.",
+        script: "Leé los tres números grandes. Contá el error de los 256 créditos con humor. El de iPhone es el más útil: Safari no muestra un video en pausa que nunca se reprodujo. Cerrá con el QR a la guía.",
         timing: "1:00",
       },
     },

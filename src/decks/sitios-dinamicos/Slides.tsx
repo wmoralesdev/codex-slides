@@ -98,7 +98,7 @@ export function AntesDespuesSlide() {
         </div>
         <span className="sd-antes-arrow" aria-hidden="true" />
         <div className="sd-antes-item">
-          <Shot src={`${A}/sitio-despues.jpg`} url="rancho-varadero.vercel.app" alt="El sitio nuevo: la piscina a pantalla completa, el titular en blanco y el riel de paradas a la derecha" />
+          <Shot src={`${A}/sitio-despues.jpg`} url="rancho-varadero.vercel.app" alt="El sitio nuevo: la piscina a pantalla completa, el titular en blanco y el riel del recorrido a la derecha" />
           <p>
             <b>Después</b> Un recorrido por el rancho que avanza con el scroll.
           </p>
@@ -120,13 +120,13 @@ export function QueEsSlide() {
       <Eyebrow>Concepto · 1:00</Eyebrow>
       <h2 className="dd-heading">El scroll no reproduce el video: lo mueve.</h2>
       <p className="dd-lead">
-        <strong>7 fotos</strong> son las paradas. <strong>6 clips</strong> generados con IA las unen. Cada clip empieza justo donde termina el anterior.
+        <strong>7 fotos</strong> son las tomas sin movimiento. <strong>6 clips</strong> generados con IA las unen. Cada clip empieza justo donde termina el anterior.
       </p>
-      <div className="sd-tira" aria-label="Las 7 paradas del recorrido unidas por 6 clips">
+      <div className="sd-tira" aria-label="Las 7 tomas sin movimiento del recorrido unidas por 6 clips">
         {paradas.map((nombre, i) => (
           <div key={nombre} className="sd-tira-item">
             <figure className="sd-tira-foto">
-              <img src={`${A}/parada-${i + 1}.webp`} alt={`Parada ${i + 1}: ${nombre}`} draggable={false} />
+              <img src={`${A}/parada-${i + 1}.webp`} alt={`Toma ${i + 1}: ${nombre}`} draggable={false} />
               <figcaption>
                 <span>{String(i + 1).padStart(2, "0")}</span>
                 {nombre}
@@ -160,7 +160,7 @@ export function NecesitasSlide() {
     { tag: "El agente", title: "Codex", body: "Con Sol o Astra en esfuerzo alto. Escribe el código y usa las herramientas.", color: green, wordmark: true },
     { tag: "Imagen y video", title: "Higgsfield", body: "Decenas de modelos en un solo lugar, conectados a Codex por MCP.", color: purple },
     { tag: "Dos skills", title: "landing-page-design + scroll-world", body: "Instrucciones empaquetadas: cómo diseñar la página y cómo armar el recorrido.", color: orange },
-    { tag: "La materia prima", title: "5–8 fotos reales", body: "Del lugar o del objeto, con buena luz. Son las paradas del recorrido.", color: blue },
+    { tag: "La materia prima", title: "5–8 fotos reales", body: "Del lugar o del objeto, con buena luz. Son las tomas sin movimiento del recorrido.", color: blue },
   ];
   return (
     <SlideFrame className="sd-necesitas">
@@ -361,17 +361,17 @@ export function SitioSlide() {
           <article style={{ "--kit": blue } as CSSProperties}>
             <span className="sd-kit-tag">Skill 2</span>
             <h3>scroll-world</h3>
-            <p>Conecta los clips al scroll: paradas con texto, versión móvil y un respaldo con fotos para quien prefiere menos movimiento.</p>
+            <p>Conecta los clips al scroll: tomas estáticas con texto, versión móvil y un respaldo con fotos para quien prefiere menos movimiento.</p>
           </article>
         </div>
         <div className="sd-sitio-prompt">
           <Prompt>
-            Armá el recorrido con scroll-world, pero los videos ya existen: <b>no generes nada ni gastes créditos.</b> Usá las 7 fotos como paradas y los 6
+            Armá el recorrido con scroll-world, pero los videos ya existen: <b>no generes nada ni gastes créditos.</b> Usá las 7 fotos como tomas sin movimiento y los 6
             clips como tramos. Español e inglés, reserva por WhatsApp.
           </Prompt>
           <span className="sd-sitio-stack">
             <Pill color={charcoal}>Astro + Tailwind</Pill>
-            <Pill color={blue}>ffmpeg para web</Pill>
+            <Pill color={blue}>2K escritorio · 720p teléfono</Pill>
             <Pill color={green}>Vercel</Pill>
           </span>
         </div>
@@ -413,8 +413,9 @@ export function NumerosSlide() {
   const errores = [
     { titulo: "Un clip con un corte brusco", solucion: "Se repitió con una dirección de cámara explícita." },
     { titulo: "El modelo agrega audio", solucion: "Se quita: el sitio va en silencio." },
+    { titulo: "En iPhone no se veían los videos", solucion: "Safari pide reproducirlos y pausarlos una vez." },
+    { titulo: "Mucho peso para datos móviles", solucion: "720p en el teléfono, 2K en escritorio, aviso de carga." },
     { titulo: "Fotos pálidas", solucion: "Retoque con un solo prompt para todas." },
-    { titulo: "En el teléfono se recorta", solucion: "Un punto de foco por parada." },
   ];
   return (
     <SlideFrame className="sd-numeros">
