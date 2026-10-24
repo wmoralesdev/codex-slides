@@ -3,7 +3,7 @@ import type { Deck, SlideDefinition } from "../types";
 import { devdayCoverSlide } from "../kit/talk";
 import { talkDecks } from "../talks";
 import { withSlideInfo } from "../kit/SlideInfo";
-import { AgendaSlide, AnnouncementsSlide, BlankSlide } from "./EventSlides";
+import { AgendaSlide, AnnouncementsSlide, makePauseDemoSlide } from "./EventSlides";
 
 const deckTitle = "Bienvenida";
 const total = "02";
@@ -39,15 +39,39 @@ const slides: SlideDefinition[] = [
   },
 ];
 
-/** Empty slide before each talk, while its speaker sets up. */
-const pause = (slug: string, title: string): SlideDefinition => ({
-  slug: `pausa-${slug}`,
-  title: `Pausa · ${title}`,
-  kicker: "Cambio de speaker",
-  component: BlankSlide,
-  guide: { intro: `Sigue «${title}». Empieza en unos minutos.` },
-  speakerNotes: { script: "Slide en blanco mientras se prepara el siguiente speaker.", timing: "Fuera del tiempo de charla" },
-});
+type PauseDemo = { id: string; project: string; author?: string; duration: string };
+
+/** Community demos played in the pause before each talk, in order. Videos live in public/demos. */
+const pauseDemos: Record<string, PauseDemo[]> = {
+  "codex-en-la-nube": [
+    { id: "biocore", project: "BIOCORE", author: "Fernando Serrano", duration: "1:08" },
+    { id: "eku", project: "Ekü", duration: "0:56" },
+  ],
+  "notion-codex": [{ id: "bedrock", project: "Bedrock", author: "Bryan Rivera Mendoza", duration: "1:30" }],
+  "video-con-codex": [{ id: "lau", project: "LaU", author: "Mateo Canales", duration: "1:58" }],
+  "sitios-dinamicos": [{ id: "miaubit", project: "La Expedición de Miaubit", author: "Diego Henríquez y Josue Sandoval", duration: "2:00" }],
+  "agents-api": [{ id: "mentarie", project: "Mentarie", author: "Anibal Andrade e Isaac Medrano", duration: "2:01" }],
+  "decisions-api": [{ id: "reporte-ciudadano", project: "Reporte Ciudadano SV", author: "Cristian Parada Mendoza", duration: "2:07" }],
+};
+
+/** Before each talk, community demos play full screen while its speaker sets up. */
+const pause = (slug: string, title: string): SlideDefinition[] =>
+  pauseDemos[slug].map((demo, i) => {
+    const by = demo.author ? `, de ${demo.author}` : "";
+    const label = `Demo de la comunidad: ${demo.project}${by}`;
+    return {
+      slug: i === 0 ? `pausa-${slug}` : `pausa-${slug}-${i + 1}`,
+      title: `Pausa · ${demo.project}`,
+      kicker: `Demo de la comunidad · ${demo.duration}`,
+      component: makePauseDemoSlide(demo.id, label),
+      ambientMotion: true,
+      guide: { intro: `Mientras se prepara «${title}», mirá ${demo.project}, una demo de la comunidad${by}.` },
+      speakerNotes: {
+        script: `Video de ${demo.project}${by} mientras se prepara el siguiente speaker. Arranca solo en la proyección; el presentador lo escucha en silencio.`,
+        timing: `${demo.duration} · fuera del tiempo de charla`,
+      },
+    };
+  });
 
 /**
  * The whole afternoon runs from this deck: each talk follows in agenda order,
@@ -55,7 +79,7 @@ const pause = (slug: string, title: string): SlideDefinition => ({
  * talk's prefix so they stay unique next to the others. Question ids already are.
  */
 const talkSlides: SlideDefinition[] = talkDecks.flatMap((deck) => [
-  pause(deck.slug, deck.title),
+  ...pause(deck.slug, deck.title),
   ...deck.slides
     .filter((slide) => slide.slug !== devdayCoverSlide.slug)
     .map((slide) => ({ ...slide, slug: `${deck.slug}-${slide.slug}` })),

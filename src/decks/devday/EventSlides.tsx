@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Face } from "../../devday/Face";
 import { FACE_PALETTE, FACE_PRESETS } from "../../devday/faces";
 import { DEVDAY_EVENT, devdayHighlights } from "../../devday/event";
@@ -169,7 +170,49 @@ export function AfterSlide() {
   );
 }
 
-/** Empty slide between talks, while the next speaker sets up. */
-export function BlankSlide() {
-  return <SlideFrame label="Pausa" footer={false}>{null}</SlideFrame>;
+/**
+ * Full-screen community demo for a pause. Thumbnails keep the poster; the presenter's
+ * preview plays muted so the room hears only the projected stage.
+ */
+function PauseVideo({ id, label }: { id: string; label: string }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const [onStage, setOnStage] = useState(false);
+  useEffect(() => {
+    const video = ref.current;
+    const stage = video?.closest<HTMLElement>("[data-motion-enabled]");
+    if (!video || !stage) return;
+    setOnStage(true);
+    video.src = `/demos/${id}.mp4`;
+    video.muted = stage.dataset.testid === "active-slide";
+    const sync = () => {
+      if (stage.dataset.motionState === "running") void video.play().catch(() => undefined);
+      else video.pause();
+    };
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(stage, { attributes: true, attributeFilter: ["data-motion-state"] });
+    return () => observer.disconnect();
+  }, [id]);
+  return (
+    <video
+      ref={ref}
+      className="ev-pause-video"
+      poster={`/demos/${id}-poster.jpg`}
+      playsInline
+      preload="none"
+      controls={onStage}
+      aria-label={label}
+    />
+  );
+}
+
+export function makePauseDemoSlide(id: string, label: string) {
+  function PauseDemoSlide() {
+    return (
+      <SlideFrame className="ev-pause-demo" label={label} footer={false}>
+        <PauseVideo id={id} label={label} />
+      </SlideFrame>
+    );
+  }
+  return PauseDemoSlide;
 }

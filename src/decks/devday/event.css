@@ -345,3 +345,16 @@
   font-size: 0.9cqw;
   line-height: 1.5;
 }
+
+/* Pauses · community demo video */
+.slide-canvas.ev-pause-demo {
+  padding: 0;
+  background: #000;
+}
+.ev-pause-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
