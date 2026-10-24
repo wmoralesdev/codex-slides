@@ -4,6 +4,7 @@ import { CornersIn, CornersOut } from "@phosphor-icons/react";
 import { projectionRoute } from "../router";
 import { findDeck, type Deck } from "../decks";
 import { slideMetadata } from "../decks/metadata";
+import { isLocalhost } from "../live/host";
 import { useSession } from "../live/useSession";
 import { ProjectedQuestion } from "../components/presenter/ProjectedQuestion";
 import { ProjectedQr } from "../components/presenter/ProjectedQr";
@@ -114,6 +115,7 @@ function LiveProjection({
     );
   const Component = slide?.component;
   const hasQuestion =
+    !isLocalhost &&
     !!slide?.question && (session.questionOpen || session.showResults);
   const theme = session.projectionTheme ?? "light";
   return (

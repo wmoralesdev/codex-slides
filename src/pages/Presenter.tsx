@@ -17,6 +17,7 @@ import { ProjectedQuestion } from "../components/presenter/ProjectedQuestion";
 import { useSlideTheme } from "../components/presenter/useSlideTheme";
 import { useAmbientMotion } from "../components/presenter/useAmbientMotion";
 import { useLive, useLiveTransport } from "../live/LiveProvider";
+import { isLocalhost } from "../live/host";
 import { useSession } from "../live/useSession";
 import { ProjectedQr } from "../components/presenter/ProjectedQr";
 import { stableContent } from "../components/presenter/sessionContent";
@@ -176,7 +177,8 @@ function Workbench({
   const votingOpen = live?.session?.questionOpen ?? false;
   const showResults = live?.session?.showResults ?? false;
   const qrVisible = live?.session?.qrVisible ?? false;
-  const hasQuestion = !!slide.question && (!live || votingOpen || showResults);
+  const hasQuestion =
+    !isLocalhost && !!slide.question && (!live || votingOpen || showResults);
   const projectionUrl = sessionId
     ? `/screen/${encodeURIComponent(deck.slug)}/${encodeURIComponent(sessionId)}`
     : undefined;
