@@ -28,7 +28,7 @@ Sin `VITE_CONVEX_URL` aparece **«No ha sido configurado Convex»**: el modo loc
 | Notion × Codex: de tus notas al trabajo hecho | `notion-codex` | Daniela Huezo | 10 |
 | De un video largo a un clip con Codex | `video-con-codex` | Rodrigo Garciaguirre | 10 |
 | Dots: ayuda que le da seguimiento a tus pendientes | `dots` | Saul Calderon | 10 |
-| Un asistente que trabaja entre tus herramientas | `agents-api` | Fernando Borea | 10 |
+| ¿Qué hace AI-native a una empresa? | `agents-api` | Fernando Borea | 16 |
 | Tema por definir | `decisions-api` | Frank Calderon | 4 |
 
 Todos los decks empiezan con la misma portada de espera **00** (la multitud de caras del holding screen de DevDay, OpenAI DevDay Exchange, Codex y Ai Labs), sin encuesta y fuera del tiempo de charla.

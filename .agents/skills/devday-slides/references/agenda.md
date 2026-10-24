@@ -10,14 +10,14 @@ Evento de comunidad: 24 de octubre de 2026, BINAES, organizado por Ai Labs. Cont
 | 2 | Daniela Huezo | Notion × Codex: de tus notas al trabajo hecho | `notion-codex/` |
 | 3 | Rodrigo Garciaguirre | De un video largo a un clip con Codex | `video-con-codex/` |
 | 4 | Saul Calderon | Dots: ayuda que le da seguimiento a tus pendientes | `dots/` |
-| 5 | Fernando Borea | Un asistente que trabaja entre tus herramientas | `agents-api/` |
+| 5 | Fernando Borea | ¿Qué hace AI-native a una empresa? | `agents-api/` |
 | 6 | Frank Calderon | Tema por definir | `decisions-api/` (ruta conservada) |
 
 El público es variado y no se presupone experiencia técnica. Explicar cada concepto desde un resultado cotidiano. Frank queda sin tecnología ni demo asignadas; no completar su charla sobre Decisions API por inferencia.
 
 Cada `deck.ts` tiene un `brief` que genera la slide 02: objetivo, temas, demo propuesta y resultado esperado. `brief.preparation` contiene instrucciones para el speaker en sus notas. La documentación para colaboradores, los enlaces y las fuentes vigentes están en `docs/charlas.md` desde la raíz del repo.
 
-Cinco charlas definidas: 15 minutos = portada 0:30 + resumen 1:30 + outline 10:00 + preguntas 3:00. La espera 00 no consume tiempo. La slide 02 reemplaza la antigua slide personal; el speaker se presenta brevemente allí.
+Cinco charlas definidas: 15 minutos = portada 0:30 + resumen 1:30 + outline 10:00 + preguntas 3:00. La espera 00 no consume tiempo. Excepción acordada con Walter: la charla de Fernando dura 20 minutos (15 de charla y 5 de preguntas). La slide 02 reemplaza la antigua slide personal; el speaker se presenta brevemente allí.
 
 ## Fuentes oficiales
 

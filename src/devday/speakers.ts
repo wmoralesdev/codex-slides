@@ -19,6 +19,7 @@ export const speakers = {
   fernando: {
     id: "fernando-borea",
     name: "Fernando Borea",
+    role: "Founder & CEO, Borea Labs",
     face: { ...FACE_PRESETS.squeeze, color: FACE_PALETTE.blue, rotation: -8 },
   },
   daniela: {

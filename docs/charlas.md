@@ -10,7 +10,7 @@ Público variado: estudiantes, profesionales, personas creativas y emprendedores
 | 2 | Daniela Huezo | Notion × Codex: de tus notas al trabajo hecho | [Ver resumen](http://127.0.0.1:5174/slides/notion-codex?slide=daniela-huezo) | `src/decks/notion-codex/deck.ts` |
 | 3 | Rodrigo Garciaguirre | De un video largo a un clip con Codex | [Ver resumen](http://127.0.0.1:5174/slides/video-con-codex?slide=rodrigo-garciaguirre) | `src/decks/video-con-codex/deck.ts` |
 | 4 | Saul Calderon | Dots: ayuda que le da seguimiento a tus pendientes | [Ver resumen](http://127.0.0.1:5174/slides/dots?slide=saul-calderon) | `src/decks/dots/deck.ts` |
-| 5 | Fernando Borea | Un asistente que trabaja entre tus herramientas | [Ver resumen](http://127.0.0.1:5174/slides/agents-api?slide=fernando-borea) | `src/decks/agents-api/deck.ts` |
+| 5 | Fernando Borea | ¿Qué hace AI-native a una empresa? | [Ver resumen](http://127.0.0.1:5174/slides/agents-api?slide=fernando-borea) | `src/decks/agents-api/deck.ts` |
 | 6 | Frank Calderon | Tema por definir | [Ver pendiente](http://127.0.0.1:5174/slides/decisions-api?slide=frank-calderon) | `src/decks/decisions-api/deck.ts` |
 
 Los enlaces usan el servidor local de esta sesión (puerto 5174); adaptar el origen al entorno de cada persona. Las caras pertenecen a cada speaker y acompañan su nueva asignación.
