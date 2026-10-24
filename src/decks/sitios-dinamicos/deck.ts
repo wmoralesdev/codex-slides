@@ -80,7 +80,6 @@ export const sitiosDinamicosDeck = defineTalk({
       speakerNotes: {
         script: "Explicá con la tira: fotos arriba, clips entre ellas. El scroll controla el tiempo del video, no lo reproduce.",
         timing: "1:00",
-        cues: ["Inspiración: la landing de Arko de midudev (github.com/midudev/mcp-higgsfield-landing)."],
       },
     },
     {
