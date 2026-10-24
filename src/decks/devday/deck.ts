@@ -55,7 +55,7 @@ const slides: SlideDefinition[] = [
     kicker: "Agenda · 1:00",
     component: withSlideInfo(AgendaSlide, info(3)),
     guide: {
-      intro: "Walter abre con Codex, Daniela sigue con Notion, después Rodrigo con video, Saul con Dots y Fernando con asistentes entre herramientas. El tema de Frank está por confirmar. Reservamos quince minutos por charla.",
+      intro: "Walter abre con Codex, Daniela sigue con Notion, después Rodrigo con video, Saul con sitios web dinámicos y Fernando con asistentes entre herramientas. El tema de Frank está por confirmar. Reservamos quince minutos por charla.",
     },
     speakerNotes: { script: "Presentá a cada speaker por nombre, en orden.", timing: "1:00" },
   },

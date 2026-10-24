@@ -33,6 +33,7 @@ export const speakers = {
     id: "saul-calderon",
     name: "Saul Calderon",
     role: "AI Product Engineer",
+    photo: "/speakers/saul-calderon.png",
     face: { ...FACE_PRESETS.plus, color: FACE_PALETTE.green, gaze: { x: 0.1, y: 0.1 } },
   },
   frank: {

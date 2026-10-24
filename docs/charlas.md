@@ -9,7 +9,7 @@ Público variado: estudiantes, profesionales, personas creativas y emprendedores
 | 1 | Walter Morales | De una idea a algo que funciona con Codex | [Ver resumen](http://127.0.0.1:5174/slides/codex-en-la-nube?slide=walter-morales) | `src/decks/codex-en-la-nube/deck.ts` |
 | 2 | Daniela Huezo | Notion × Codex: de tus notas al trabajo hecho | [Ver resumen](http://127.0.0.1:5174/slides/notion-codex?slide=daniela-huezo) | `src/decks/notion-codex/deck.ts` |
 | 3 | Rodrigo Garciaguirre | De un video largo a un clip con Codex | [Ver resumen](http://127.0.0.1:5174/slides/video-con-codex?slide=rodrigo-garciaguirre) | `src/decks/video-con-codex/deck.ts` |
-| 4 | Saul Calderon | Dots: ayuda que le da seguimiento a tus pendientes | [Ver resumen](http://127.0.0.1:5174/slides/dots?slide=saul-calderon) | `src/decks/dots/deck.ts` |
+| 4 | Saul Calderon | Generación de sitios web dinámicos con Codex y Higgsfield | [Ver resumen](http://127.0.0.1:5174/slides/sitios-dinamicos?slide=saul-calderon) | `src/decks/sitios-dinamicos/deck.ts` |
 | 5 | Fernando Borea | ¿Qué hace AI-native a una empresa? | [Ver resumen](http://127.0.0.1:5174/slides/agents-api?slide=fernando-borea) | `src/decks/agents-api/deck.ts` |
 | 6 | Frank Calderon | AI Coding: generar código es fácil. Construir software es otra historia | [Ver resumen](http://127.0.0.1:5174/slides/decisions-api?slide=frank-calderon) | `src/decks/decisions-api/deck.ts` |
 

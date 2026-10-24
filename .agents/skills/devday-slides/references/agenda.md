@@ -9,7 +9,7 @@ Evento de comunidad: 24 de octubre de 2026, BINAES, organizado por Ai Labs. Cont
 | 1 | Walter Morales | De una idea a algo que funciona con Codex | `codex-en-la-nube/` |
 | 2 | Daniela Huezo | Notion × Codex: de tus notas al trabajo hecho | `notion-codex/` |
 | 3 | Rodrigo Garciaguirre | De un video largo a un clip con Codex | `video-con-codex/` |
-| 4 | Saul Calderon | Dots: ayuda que le da seguimiento a tus pendientes | `dots/` |
+| 4 | Saul Calderon | Generación de sitios web dinámicos con Codex y Higgsfield | `sitios-dinamicos/` |
 | 5 | Fernando Borea | ¿Qué hace AI-native a una empresa? | `agents-api/` |
 | 6 | Frank Calderon | AI Coding: generar código es fácil. Construir software es otra historia | `decisions-api/` (ruta conservada) |
 
