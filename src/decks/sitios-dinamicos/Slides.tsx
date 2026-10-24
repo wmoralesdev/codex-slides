@@ -478,7 +478,7 @@ export function AboutSlide() {
           Calderon
         </h1>
         <ul className="sd-about-roles">
-          <li>AI Product Engineer at an LA startup</li>
+          <li>AI Product Engineer · LA startup</li>
           <li>SpaceX AI Ambassador</li>
         </ul>
         <div className="sd-about-links">
