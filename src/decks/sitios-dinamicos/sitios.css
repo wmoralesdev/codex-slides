@@ -110,8 +110,23 @@
   gap: 2cqw;
   margin: auto 0 3.4cqw;
 }
+.sd-antes-caption {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.4cqw;
+  margin-top: 1.1cqw;
+}
+.sd-antes-caption svg {
+  flex: none;
+  width: 5.6cqw;
+  height: 5.6cqw;
+  padding: 0.45cqw;
+  border-radius: 0.8cqw;
+  background: #fff;
+  box-shadow: 0 0 0 0.08cqw var(--slide-border);
+}
 .sd-antes-item p {
-  margin-top: 1.1cqw !important;
   color: var(--slide-muted);
   font-size: 1.3cqw;
   line-height: 1.4;

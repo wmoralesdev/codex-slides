@@ -97,16 +97,22 @@ export function AntesDespuesSlide() {
       <div className="sd-antes-pair">
         <div className="sd-antes-item sd-antes-item--antes">
           <Shot src={`${A}/sitio-antes.jpg`} url="rancho-varadero.vercel.app/antes" alt="El sitio básico de Rancho Varadero: plantilla genérica con barra oscura, foto de portada y botones azules" />
-          <p>
-            <b>Antes</b> Una plantilla genérica con las fotos tal cual.
-          </p>
+          <div className="sd-antes-caption">
+            <p>
+              <b>Antes</b> Una plantilla genérica con las fotos tal cual.
+            </p>
+            <QRCodeSVG value={`${SITIO}/antes`} size={256} level="M" marginSize={0} bgColor="#ffffff" fgColor="#171717" title="Abrir la versión básica: rancho-varadero.vercel.app/antes" />
+          </div>
         </div>
         <span className="sd-antes-arrow" aria-hidden="true" />
         <div className="sd-antes-item">
           <Shot src={`${A}/sitio-despues.jpg`} url="rancho-varadero.vercel.app" alt="El sitio nuevo: la piscina a pantalla completa, el titular en blanco y el riel del recorrido a la derecha" />
-          <p>
-            <b>Después</b> Un recorrido por el rancho que avanza con el scroll.
-          </p>
+          <div className="sd-antes-caption">
+            <p>
+              <b>Después</b> Un recorrido por el rancho que avanza con el scroll.
+            </p>
+            <QRCodeSVG value={SITIO} size={256} level="M" marginSize={0} bgColor="#ffffff" fgColor="#171717" title="Abrir el sitio nuevo: rancho-varadero.vercel.app" />
+          </div>
         </div>
       </div>
     </SlideFrame>

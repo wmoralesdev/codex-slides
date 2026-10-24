@@ -60,12 +60,13 @@ export const sitiosDinamicosDeck = defineTalk({
       guide: {
         intro:
           "El mismo rancho, dos sitios. El primero usa una plantilla genérica con las fotos tal cual. El segundo se recorre con el scroll: la cámara camina de la piscina a la playa.",
+        sections: [{ title: "Probalo", body: "Antes: rancho-varadero.vercel.app/antes · Después: rancho-varadero.vercel.app" }],
         takeaway: "Mismo negocio, mismas fotos. Cambia la experiencia.",
       },
       speakerNotes: {
         script: "Mostrá las dos capturas. Contá que es un rancho real de playa en El Amatal y que las dos versiones están publicadas.",
         timing: "1:00",
-        cues: ["Si hay tiempo, abrí /antes en vivo y hacé scroll: nada se mueve."],
+        cues: ["Invitá a escanear los dos QR para comparar en el teléfono.", "Si hay tiempo, abrí /antes en vivo y hacé scroll: nada se mueve."],
       },
     },
     {
