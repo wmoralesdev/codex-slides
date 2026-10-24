@@ -7,6 +7,7 @@ import {
   ConectarSlide,
   CostoSlide,
   DemoSlide,
+  HiggsfieldSlide,
   KeyframesSlide,
   NecesitasSlide,
   NumerosSlide,
@@ -101,9 +102,29 @@ export const sitiosDinamicosDeck = defineTalk({
       speakerNotes: { script: "Recorré las cuatro tarjetas rápido. Definí skill y MCP en una frase cada una.", timing: "0:30" },
     },
     {
+      slug: "que-es-higgsfield",
+      title: "¿Qué es Higgsfield?",
+      kicker: "Herramienta · 0:30",
+      component: HiggsfieldSlide,
+      ambientMotion: true,
+      guide: {
+        intro:
+          "Higgsfield es una plataforma que reúne decenas de modelos de imagen, video y audio en un solo lugar. Elegís el modelo, subís tus fotos y pagás con créditos.",
+        sections: [
+          { title: "Lo que usamos", body: "Imagen: GPT Image 2.5 para el retoque, outpaint y upscale. Video: MiniMax H3, Kling y Seedance. Conexión: MCP desde Codex o su CLI." },
+          { title: "En la grabación", body: "Genjutsu toma el movimiento de un video y lo recrea con tus personajes, lugares o productos." },
+        ],
+        takeaway: "Un solo lugar para todos los modelos: no necesitás una cuenta por modelo.",
+      },
+      speakerNotes: {
+        script: "Dejá correr la grabación. Explicalo en una frase: muchos modelos de imagen y video en un solo lugar, pagados con créditos. Nombrá los que usamos y pasá a conectarlo.",
+        timing: "0:30",
+      },
+    },
+    {
       slug: "paso-1-conectar",
       title: "Paso 1 · Conectá Higgsfield con Codex",
-      kicker: "Paso 1 de 5 · 1:00",
+      kicker: "Paso 1 de 5 · 0:30",
       component: ConectarSlide,
       guide: {
         intro:
@@ -116,7 +137,7 @@ export const sitiosDinamicosDeck = defineTalk({
       },
       speakerNotes: {
         script: "Mostrá la página MCP de Higgsfield y los tres pasos de conexión. Aclará que en ChatGPT es un plugin y en Codex es el mismo servidor MCP.",
-        timing: "1:00",
+        timing: "0:30",
       },
     },
     {
