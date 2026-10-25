@@ -71,6 +71,20 @@ export function ConfigContent() {
   );
 }
 
+/** Header for the read-only archive: no live connection to report. */
+export function ReadOnlyHeader() {
+  return (
+    <header className="app-header">
+      <Brand />
+      <nav className="main-nav" aria-label="Navegación principal">
+        <Link to="/" className="nav-active">
+          Decks
+        </Link>
+      </nav>
+    </header>
+  );
+}
+
 export function ShellHeader() {
   const [modal, setModal] = useState<"config" | "help" | null>(null);
   const { mode } = useLive();

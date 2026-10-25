@@ -19,44 +19,17 @@ import {
 import type { Session } from "../src/live/types";
 
 const addressArgs = { namespace: v.string(), sessionId: v.string() };
-const MAX_PRESENTER_PASSWORD_LENGTH = 1024;
-
-function requirePresenterPassword(password: string | undefined): void {
-  const expected = process.env.PRESENTER_PASSWORD;
-  if (
-    !expected ||
-    !expected.trim() ||
-    expected.length > MAX_PRESENTER_PASSWORD_LENGTH
-  ) {
-    throw new ConvexError({
-      code: "PRESENTER_PASSWORD_NOT_CONFIGURED",
-      message: "Falta configurar la contraseña del presentador en el servidor.",
-    });
-  }
-  if (!password) {
-    throw new ConvexError({
-      code: "PRESENTER_PASSWORD_REQUIRED",
-      message: "Ingresá la contraseña para controlar la presentación.",
-    });
-  }
-  if (password.length > MAX_PRESENTER_PASSWORD_LENGTH) {
-    throw new ConvexError({
-      code: "PRESENTER_PASSWORD_INVALID",
-      message: "La contraseña del presentador no es correcta.",
-    });
-  }
-
-  let difference = expected.length ^ password.length;
-  for (let index = 0; index < expected.length; index++) {
-    difference |=
-      expected.charCodeAt(index) ^ (password.charCodeAt(index) || 0);
-  }
-  if (difference !== 0) {
-    throw new ConvexError({
-      code: "PRESENTER_PASSWORD_INVALID",
-      message: "La contraseña del presentador no es correcta.",
-    });
-  }
+/**
+ * The event is over and the app is read-only, so live sessions are closed: every
+ * write is rejected and nothing asks for a presenter password any more.
+ * Setting LIVE_SESSIONS_OPEN=true on the deployment opens them again, with no password.
+ */
+function requireLiveSessions(): void {
+  if (process.env.LIVE_SESSIONS_OPEN === "true") return;
+  throw new ConvexError({
+    code: "EVENT_ENDED",
+    message: "El evento terminó: las slides están en modo lectura.",
+  });
 }
 
 function publicRule<T>(run: () => T): T {
@@ -131,10 +104,11 @@ function publicSession(row: Doc<"sessions">): Session {
 }
 
 export const authorizePresenter = mutation({
+  // Kept for older clients, which still call it before presenting.
   args: { password: v.string() },
   returns: v.null(),
-  handler: (_ctx, args): null => {
-    requirePresenterPassword(args.password);
+  handler: (): null => {
+    requireLiveSessions();
     return null;
   },
 });
@@ -144,13 +118,14 @@ export const create = mutation({
   args: {
     ...addressArgs,
     presenterKey: v.string(),
+    // Ignored: older clients still send it.
     presenterPassword: v.optional(v.string()),
     deckSlug: v.string(),
     deckTitle: v.string(),
     slides: v.array(slideValidator),
   },
   handler: async (ctx, args): Promise<string> => {
-    requirePresenterPassword(args.presenterPassword);
+    requireLiveSessions();
     validateAddress(args.namespace, args.sessionId);
     validateToken(args.presenterKey);
     publicRule(() => validateManifest(args));
@@ -269,6 +244,7 @@ export const join = mutation({
   returns: v.null(),
   args: { ...addressArgs, participantToken: v.string() },
   handler: async (ctx, args): Promise<null> => {
+    requireLiveSessions();
     validateToken(args.participantToken);
     const session = await requireSession(ctx, args.namespace, args.sessionId);
     if (session.status !== "live")
@@ -311,11 +287,12 @@ export const update = mutation({
   args: {
     ...addressArgs,
     presenterKey: v.string(),
+    // Ignored: older clients still send it.
     presenterPassword: v.optional(v.string()),
     action: presenterActionValidator,
   },
   handler: async (ctx, args): Promise<null> => {
-    requirePresenterPassword(args.presenterPassword);
+    requireLiveSessions();
     const row = await requireSession(ctx, args.namespace, args.sessionId);
     if (!args.presenterKey || row.presenterKey !== args.presenterKey)
       throw new ConvexError("Solo el presentador puede controlar esta sesión.");
@@ -347,6 +324,7 @@ export const vote = mutation({
     optionIds: v.array(v.string()),
   },
   handler: async (ctx, args): Promise<null> => {
+    requireLiveSessions();
     const session = await requireSession(ctx, args.namespace, args.sessionId);
     const participant = await ctx.db
       .query("participants")

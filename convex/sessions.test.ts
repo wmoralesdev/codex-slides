@@ -8,10 +8,10 @@ import type { CreateSessionInput, PresenterAction } from "../src/live/types";
 const modules = import.meta.glob("./**/*.{ts,js}");
 const address = { namespace: "grok-bot-slides", sessionId: "a123456789abcdef" };
 const presenterKey = "a".repeat(48);
-const presenterPassword = "fixture-only-password-2026";
 
 beforeEach(() => {
-  vi.stubEnv("PRESENTER_PASSWORD", presenterPassword);
+  // The tests exercise the live sessions, which are closed after the event.
+  vi.stubEnv("LIVE_SESSIONS_OPEN", "true");
 });
 
 afterEach(() => {
@@ -59,7 +59,6 @@ const manifest: CreateSessionInput = {
 async function setup() {
   const t = convexTest(schema, modules);
   await t.mutation(sessionsApi.create, {
-    presenterPassword,
     ...address,
     ...manifest,
     presenterKey,
@@ -67,208 +66,43 @@ async function setup() {
   return t;
 }
 
-describe("contraseña del presentador en el servidor", () => {
-  it.each([
-    [undefined, "PRESENTER_PASSWORD_REQUIRED"],
-    ["", "PRESENTER_PASSWORD_REQUIRED"],
-    ["incorrecta", "PRESENTER_PASSWORD_INVALID"],
-    [` ${presenterPassword}`, "PRESENTER_PASSWORD_INVALID"],
-    [`${presenterPassword} `, "PRESENTER_PASSWORD_INVALID"],
-    ["x".repeat(1025), "PRESENTER_PASSWORD_INVALID"],
-  ])(
-    "rechaza crear sesiones con una contraseña inválida (%s)",
-    async (password, code) => {
-      const t = convexTest(schema, modules);
-      await expect(
-        t.mutation(sessionsApi.create, {
-          ...address,
-          ...manifest,
-          presenterKey,
-          presenterPassword: password,
-        }),
-      ).rejects.toMatchObject({ data: { code } });
-      expect(await t.run((ctx) => ctx.db.query("sessions").take(1))).toEqual(
-        [],
-      );
-    },
-  );
-
-  it.each([undefined, "", "  \t\n", "x".repeat(1025)])(
-    "falla cerrado cuando la contraseña del servidor no está configurada correctamente",
-    async (configured) => {
-      const t = convexTest(schema, modules);
-      vi.stubEnv("PRESENTER_PASSWORD", configured);
-      const error = { data: { code: "PRESENTER_PASSWORD_NOT_CONFIGURED" } };
-      await expect(
-        t.mutation(sessionsApi.authorizePresenter, {
-          password: presenterPassword,
-        }),
-      ).rejects.toMatchObject(error);
-      await expect(
-        t.mutation(sessionsApi.create, {
-          ...address,
-          ...manifest,
-          presenterKey,
-          presenterPassword,
-        }),
-      ).rejects.toMatchObject(error);
-      expect(await t.run((ctx) => ctx.db.query("sessions").take(1))).toEqual(
-        [],
-      );
-    },
-  );
-
-  it("autoriza sin escribir datos y conserva los espacios de una contraseña válida", async () => {
-    const t = convexTest(schema, modules);
-    const exactPassword = "  contraseña con espacios  ";
-    vi.stubEnv("PRESENTER_PASSWORD", exactPassword);
+describe("sesiones cerradas después del evento", () => {
+  it("rechaza toda escritura sin LIVE_SESSIONS_OPEN y no pide contraseña", async () => {
+    const t = await setup();
+    vi.stubEnv("LIVE_SESSIONS_OPEN", undefined);
+    const ended = { data: { code: "EVENT_ENDED" } };
     await expect(
-      t.mutation(sessionsApi.authorizePresenter, { password: exactPassword }),
-    ).resolves.toBeNull();
-    await expect(
-      t.mutation(sessionsApi.authorizePresenter, {
-        password: exactPassword.trim(),
-      }),
-    ).rejects.toMatchObject({ data: { code: "PRESENTER_PASSWORD_INVALID" } });
-    expect(await t.run((ctx) => ctx.db.query("sessions").take(1))).toEqual([]);
-  });
-
-  it("comprueba la contraseña antes de buscar la sesión o validar sus datos", async () => {
-    const t = convexTest(schema, modules);
+      t.mutation(sessionsApi.authorizePresenter, { password: "x" }),
+    ).rejects.toMatchObject(ended);
     await expect(
       t.mutation(sessionsApi.create, {
-        namespace: "inválido",
-        sessionId: "inexistente",
+        ...address,
+        sessionId: "b123456789abcdef",
         ...manifest,
-        presenterKey: "inválida",
-      }),
-    ).rejects.toMatchObject({ data: { code: "PRESENTER_PASSWORD_REQUIRED" } });
-    await expect(
-      t.mutation(sessionsApi.update, {
-        namespace: "inválido",
-        sessionId: "inexistente",
         presenterKey,
-        action: { type: "end" },
       }),
-    ).rejects.toMatchObject({ data: { code: "PRESENTER_PASSWORD_REQUIRED" } });
-    expect(await t.run((ctx) => ctx.db.query("sessions").take(1))).toEqual([]);
-  });
-
-  it("exige contraseña para todas las acciones aun con la credencial correcta", async () => {
-    const t = await setup();
-    const before = await t.query(sessionsApi.snapshot, address);
-    const actions = [
-      { type: "navigate", slug: "workflow" },
-      { type: "question", open: true, slideSlug: "welcome" },
-      { type: "results", show: true, slideSlug: "welcome" },
-      { type: "qr", visible: true },
-      { type: "theme", theme: "light" },
-      { type: "end" },
-    ] as const;
-    for (const action of actions) {
-      for (const password of [undefined, "incorrecta"]) {
-        await expect(
-          t.mutation(sessionsApi.update, {
-            ...address,
-            presenterKey,
-            presenterPassword: password,
-            action,
-          }),
-        ).rejects.toMatchObject({
-          data: {
-            code: password
-              ? "PRESENTER_PASSWORD_INVALID"
-              : "PRESENTER_PASSWORD_REQUIRED",
-          },
-        });
-      }
-    }
-    expect(await t.query(sessionsApi.snapshot, address)).toEqual(before);
-  });
-
-  it("una sesión anterior también requiere contraseña para abrir una encuesta", async () => {
-    const t = convexTest(schema, modules);
-    await t.run((ctx) =>
-      ctx.db.insert("sessions", {
-        publicId: address.sessionId,
-        namespace: address.namespace,
-        presenterKey,
-        ...manifest,
-        activeSlideSlug: "welcome",
-        questionOpen: false,
-        showResults: false,
-        status: "live",
-        createdAt: 1,
-        updatedAt: 1,
-      }),
-    );
+    ).rejects.toMatchObject(ended);
     await expect(
       t.mutation(sessionsApi.update, {
         ...address,
         presenterKey,
-        action: { type: "question", open: true, slideSlug: "welcome" },
+        action: { type: "navigate", slug: "workflow" },
       }),
-    ).rejects.toMatchObject({ data: { code: "PRESENTER_PASSWORD_REQUIRED" } });
-    expect(
-      (await t.query(sessionsApi.snapshot, address)).session,
-    ).toMatchObject({
-      questionOpen: false,
-      updatedAt: 1,
-    });
-  });
-
-  it("al cambiar o quitar la variable bloquea la contraseña anterior sin afectar al público", async () => {
-    const t = await setup();
-    await t.mutation(sessionsApi.update, {
-      ...address,
-      presenterKey,
-      presenterPassword,
-      action: { type: "question", open: true, slideSlug: "welcome" },
-    });
-    vi.stubEnv("PRESENTER_PASSWORD", "contraseña-rotada");
+    ).rejects.toMatchObject(ended);
     await expect(
-      t.mutation(sessionsApi.update, {
-        ...address,
-        presenterKey,
-        presenterPassword,
-        action: { type: "end" },
-      }),
-    ).rejects.toMatchObject({ data: { code: "PRESENTER_PASSWORD_INVALID" } });
-    vi.stubEnv("PRESENTER_PASSWORD", undefined);
+      t.mutation(sessionsApi.join, { ...address, participantToken: tokenOne }),
+    ).rejects.toMatchObject(ended);
     await expect(
-      t.mutation(sessionsApi.update, {
+      t.mutation(sessionsApi.vote, {
         ...address,
-        presenterKey,
-        presenterPassword,
-        action: { type: "end" },
+        participantToken: tokenOne,
+        slideSlug: "welcome",
+        optionIds: ["yes"],
       }),
-    ).rejects.toMatchObject({
-      data: { code: "PRESENTER_PASSWORD_NOT_CONFIGURED" },
-    });
-    await t.mutation(sessionsApi.join, {
-      ...address,
-      participantToken: tokenOne,
-    });
-    await t.mutation(sessionsApi.vote, {
-      ...address,
-      participantToken: tokenOne,
-      slideSlug: "welcome",
-      optionIds: ["yes"],
-    });
-    const publicView = await t.query(sessionsApi.snapshot, address);
-    const participantView = await t.query(sessionsApi.snapshot, {
-      ...address,
-      participantToken: tokenOne,
-    });
-    expect(publicView.session?.status).toBe("live");
-    expect(publicView.participants).toHaveLength(1);
-    expect(participantView.votes).toHaveLength(1);
-    expect(JSON.stringify([publicView, participantView])).not.toContain(
-      presenterPassword,
-    );
-    expect(
-      JSON.stringify(await t.run((ctx) => ctx.db.query("sessions").take(1))),
-    ).not.toContain(presenterPassword);
+    ).rejects.toMatchObject(ended);
+    const view = await t.query(sessionsApi.snapshot, address);
+    expect(view.session?.activeSlideSlug).toBe("welcome");
+    expect(view.participants).toHaveLength(0);
   });
 });
 
@@ -308,7 +142,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
     ]) {
       await expect(
         t.mutation(sessionsApi.update, {
-          presenterPassword,
           ...address,
           presenterKey: tokenOne,
           action,
@@ -317,7 +150,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
     }
     await expect(
       t.mutation(sessionsApi.update, {
-        presenterPassword,
         ...address,
         presenterKey: tokenOne,
         action: { type: "end" },
@@ -338,7 +170,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       participantToken: tokenOne,
     });
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "question", open: true, slideSlug: "welcome" },
@@ -350,13 +181,11 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       optionIds: ["yes"],
     });
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "qr", visible: true },
     });
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "theme", theme: "light" },
@@ -391,7 +220,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
     expect(changed.votes[0].optionIds).toEqual(["no"]);
     expect(changed.session?.questionOpenedAt).toBe(openedAt);
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "question", open: false, slideSlug: "welcome" },
@@ -400,7 +228,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       1,
     );
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "results", show: false, slideSlug: "welcome" },
@@ -410,7 +237,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
     );
 
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "navigate", slug: "workflow" },
@@ -425,7 +251,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       showResults: false,
     });
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "navigate", slug: "welcome" },
@@ -441,13 +266,11 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       questionOpenedAt: openedAt,
     });
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "qr", visible: true },
     });
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "end" },
@@ -457,7 +280,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
     ).toMatchObject({ status: "ended", qrVisible: false });
     await expect(
       t.mutation(sessionsApi.update, {
-        presenterPassword,
         ...address,
         presenterKey,
         action: { type: "qr", visible: true },
@@ -465,7 +287,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
     ).rejects.toThrow("ya terminó");
     await expect(
       t.mutation(sessionsApi.update, {
-        presenterPassword,
         ...address,
         presenterKey,
         action: { type: "theme", theme: "dark" },
@@ -493,7 +314,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       (await t.query(sessionsApi.snapshot, address)).session,
     ).toMatchObject({ qrVisible: false, projectionTheme: "dark" });
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "qr", visible: true },
@@ -557,7 +377,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       t.mutation(sessionsApi.update, {
         ...address,
         presenterKey,
-        presenterPassword,
         action,
       });
     await update({ type: "question", open: true, slideSlug: "welcome" });
@@ -606,7 +425,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
     expect(rejoined.participant).toEqual(first.participant);
     expect(rejoined.participants).toHaveLength(2);
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "question", open: true, slideSlug: "welcome" },
@@ -665,7 +483,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       slideSlug: "welcome",
     };
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "question", open: false, slideSlug: "welcome" },
@@ -674,7 +491,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       t.mutation(sessionsApi.vote, { ...voteArgs, optionIds: ["yes"] }),
     ).rejects.toThrow("cerró las preguntas");
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "question", open: true, slideSlug: "welcome" },
@@ -684,14 +500,12 @@ describe("funciones de Convex con su esquema y base de datos", () => {
         t.mutation(sessionsApi.vote, { ...voteArgs, optionIds }),
       ).rejects.toThrow();
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "navigate", slug: "workflow" },
     });
     await expect(
       t.mutation(sessionsApi.update, {
-        presenterPassword,
         ...address,
         presenterKey,
         action: { type: "question", open: true, slideSlug: "welcome" },
@@ -699,7 +513,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
     ).rejects.toThrow("La presentación avanzó");
     await expect(
       t.mutation(sessionsApi.update, {
-        presenterPassword,
         ...address,
         presenterKey,
         action: { type: "results", show: true, slideSlug: "welcome" },
@@ -709,7 +522,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       (await t.query(sessionsApi.snapshot, address)).session,
     ).toMatchObject({ questionOpen: true });
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "question", open: true, slideSlug: "workflow" },
@@ -722,7 +534,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       optionIds: ["code", "review"],
     });
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "end" },
@@ -746,7 +557,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       participantToken: tokenOne,
     });
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "question", open: true, slideSlug: "welcome" },
@@ -761,7 +571,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       1,
     );
     await t.mutation(sessionsApi.update, {
-      presenterPassword,
       ...address,
       presenterKey,
       action: { type: "navigate", slug: "workflow" },
@@ -781,7 +590,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
       (await t.query(sessionsApi.snapshot, otherAddress)).session,
     ).toBeNull();
     await t.mutation(sessionsApi.create, {
-      presenterPassword,
       ...otherAddress,
       ...manifest,
       presenterKey: tokenTwo,
@@ -792,7 +600,6 @@ describe("funciones de Convex con su esquema y base de datos", () => {
     ).toBe(false);
     await expect(
       t.mutation(sessionsApi.create, {
-        presenterPassword,
         ...address,
         ...manifest,
         presenterKey,

@@ -9,7 +9,7 @@ import {
   Broadcast,
 } from "@phosphor-icons/react";
 import { decks, type Deck } from "../decks";
-import { ShellHeader, ConnectionNotice } from "../components/Shell";
+import { ReadOnlyHeader } from "../components/Shell";
 import { Face } from "../devday/Face";
 import { AiLabsLogo, OpenAIWordmark } from "../devday/Brand";
 import { DEVDAY_EVENT } from "../devday/event";
@@ -37,7 +37,7 @@ export function Library() {
   const EventCover = eventDeck.slides[0].component;
   return (
     <div className="app-shell">
-      <ShellHeader />
+      <ReadOnlyHeader />
       <main className="library-main">
         <section className="library-hero" aria-labelledby="library-title">
           <div className="library-hero-text">
@@ -52,18 +52,17 @@ export function Library() {
               DevDay Exchange.
             </h1>
             <p className="library-lead">
-              La apertura y las seis charlas del evento. Cada speaker arma su
-              contenido sobre la misma base: portada, guía en el teléfono y
-              encuestas en vivo.
+              La apertura y las seis charlas del evento, para volver a verlas a
+              tu ritmo.
             </p>
             <div className="library-actions">
               <Link
                 className="button primary large"
-                to="/deck/$deckSlug"
+                to="/slides/$deckSlug"
                 params={{ deckSlug: eventDeck.slug }}
                 search={{ slide: undefined }}
               >
-                Abrir la apertura <ArrowUpRight size={18} />
+                Ver la apertura <ArrowUpRight size={18} />
               </Link>
               <a className="button secondary large" href="#agenda">
                 Ver la agenda <ArrowRight size={18} />
@@ -72,7 +71,7 @@ export function Library() {
           </div>
           <div className="library-hero-visual">
             <Link
-              to="/deck/$deckSlug"
+              to="/slides/$deckSlug"
               params={{ deckSlug: eventDeck.slug }}
               search={{ slide: undefined }}
               className="library-hero-cover"
@@ -95,7 +94,6 @@ export function Library() {
               <h2 id="agenda-title">La agenda</h2>
               <p>
                 Seis charlas alrededor de lo que anunció OpenAI en DevDay 2026.
-                Los títulos de cada slide ya están; el contenido lo arma cada speaker.
               </p>
             </div>
             <label className="search-field">
@@ -124,7 +122,7 @@ export function Library() {
                 return (
                   <li className="talk-card" key={deck.slug}>
                     <Link
-                      to="/deck/$deckSlug"
+                      to="/slides/$deckSlug"
                       params={{ deckSlug: deck.slug }}
                       search={{ slide: undefined }}
                       className="talk-cover"
@@ -187,7 +185,6 @@ export function Library() {
             </div>
           )}
         </section>
-        <ConnectionNotice />
       </main>
       <footer className="library-footer dd-on-dark">
         <div>

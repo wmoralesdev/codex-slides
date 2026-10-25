@@ -1,5 +1,7 @@
 # DevDay Slides · San Salvador
 
+> **El evento terminó.** La app está en modo lectura: solo la biblioteca y la vista `/slides/<deck>`, sin Convex ni encuestas. Los enlaces del evento (`/deck`, `/present`, `/screen`, `/join`) redirigen a esa vista. Convex rechaza toda escritura salvo que su deployment tenga `LIVE_SESSIONS_OPEN=true`, y ya no hay contraseña de presentador. Lo que sigue describe cómo funcionaba en vivo.
+
 Las slides de **DevDay Exchange San Salvador** (sábado 24 de octubre de 2026, BINAES, organiza Ai Labs): la apertura del evento y seis charlas alrededor de lo que anunció OpenAI en DevDay 2026. Cada slide es un componente React; el público sigue una guía en su teléfono y responde encuestas en vivo.
 
 Esta rama rehace la UI de Grok bot Slides con la identidad de DevDay: las caras del evento en lugar de los bots, Geist, lienzo blanco, OpenAI y Codex como referencia y Ai Labs como organizador. La lógica de sesiones, encuestas y Convex es la misma.
@@ -96,9 +98,9 @@ Cada presentación crea un ID de sesión nuevo y toma una copia de los metadatos
 
 La clave aleatoria del presentador se conserva en `localStorage` del navegador que inicia la sesión. El QR y las respuestas públicas de Convex no incluyen esa clave; las mutaciones de control la comprueban en el servidor. Copiar la URL del presentador a otro navegador no transfiere sus permisos. Borrar el almacenamiento o cambiar de origen pierde ese acceso; en esta versión no hay cuentas ni recuperación de sesiones. Cada participante guarda un token propio por sesión para conservar avatar y respuesta al recargar.
 
-Configura **`PRESENTER_PASSWORD`** en las variables de entorno del **deployment de Convex** al que apunta `VITE_CONVEX_URL`. No lleva prefijo `VITE_` ni se configura en Vercel. Crear sesiones y cada acción del moderador (incluidas las encuestas de sesiones anteriores) validan esa contraseña en el servidor antes de acceder a la base. Si falta, está vacía o supera 1024 caracteres, esas acciones quedan bloqueadas. El diálogo la solicita al iniciar o retomar el control; solo se conserva en memoria hasta recargar o cerrar la página, nunca en enlaces ni almacenamiento del navegador. Cambiarla en Convex revoca la contraseña anterior en la siguiente acción. Las lecturas públicas, el ingreso y los votos de participantes no requieren esta contraseña.
+Después del evento ya no hay contraseña de presentador. Las sesiones en vivo están cerradas en Convex: crear, controlar, ingresar y votar se rechazan con `EVENT_ENDED`. Para reabrirlas, configura `LIVE_SESSIONS_OPEN=true` en el deployment de Convex; quedan abiertas sin contraseña, así que agregá otra protección antes de usarlas con público.
 
-Varias copias del frontend pueden usar el **mismo deployment de Convex** con distintos `VITE_WORKSPACE_SLUG` y la misma contraseña del deployment. El slug organiza las sesiones de cada variante y no es una contraseña. El modo local es una demostración: almacena todos sus datos en el navegador y no requiere la contraseña; la autoridad del servidor se aplica al usar Convex.
+Varias copias del frontend pueden usar el **mismo deployment de Convex** con distintos `VITE_WORKSPACE_SLUG`. El slug organiza las sesiones de cada variante y no es una contraseña. El modo local es una demostración: almacena todos sus datos en el navegador.
 
 Consulta [cómo personalizar decks y compartir una variante](docs/customize.md) y [el modelo de Convex](convex/README.md).
 

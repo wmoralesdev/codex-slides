@@ -4,42 +4,19 @@ import {
   createRouter,
   Outlet,
   Link,
-  useRouterState,
+  redirect,
 } from "@tanstack/react-router";
 import { Library } from "./pages/Library";
-import { DeckPage, PresenterPage } from "./pages/Presenter";
-import { AudiencePage } from "./pages/Audience";
-import { ProjectionPage } from "./pages/Projection";
 import { StaticSlidesPage } from "./pages/StaticSlides";
-import { findDeck } from "./decks";
-import { LiveProvider } from "./live/LiveProvider";
 
-function RootLayout() {
-  const isStaticReader = useRouterState({
-    select: (state) =>
-      state.matches.some((match) => match.routeId === "/slides/$deckSlug"),
-  });
-  const deckSlug = useRouterState({
-    select: (state) => {
-      for (const match of state.matches) {
-        if ("deckSlug" in match.params) return match.params.deckSlug;
-      }
-      return undefined;
-    },
-  });
-  const standalone =
-    typeof deckSlug === "string" &&
-    findDeck(deckSlug)?.presentationMode === "standalone";
-  if (isStaticReader) return <Outlet />;
-  return (
-    <LiveProvider localOnly={standalone}>
-      <Outlet />
-    </LiveProvider>
-  );
-}
-
+/**
+ * The event is over: the app is read-only. Only the library and the reading view
+ * (/slides) render; nothing connects to Convex and no question is shown.
+ * The presenter, projection and audience URLs from the event (QR codes, shared
+ * links) redirect to the reading view of the same deck.
+ */
 const rootRoute = createRootRoute({
-  component: RootLayout,
+  component: Outlet,
   notFoundComponent: () => (
     <main className="empty-page">
       <h1>Por aquí no hay slides.</h1>
@@ -75,12 +52,16 @@ export const deckRoute = createRoute({
   validateSearch: (search: Record<string, unknown>) => ({
     slide: typeof search.slide === "string" ? search.slide : undefined,
   }),
-  component: DeckPage,
+  beforeLoad: ({ params, search }) => {
+    throw redirect({ to: "/slides/$deckSlug", params, search });
+  },
 });
 export const presenterRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/present/$deckSlug/$sessionId",
-  component: PresenterPage,
+  beforeLoad: ({ params }) => {
+    throw redirect({ to: "/slides/$deckSlug", params: { deckSlug: params.deckSlug }, search: { slide: undefined } });
+  },
 });
 export const staticSlidesRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -93,12 +74,16 @@ export const staticSlidesRoute = createRoute({
 export const audienceRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/join/$sessionId",
-  component: AudiencePage,
+  beforeLoad: () => {
+    throw redirect({ to: "/" });
+  },
 });
 export const projectionRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/screen/$deckSlug/$sessionId",
-  component: ProjectionPage,
+  beforeLoad: ({ params }) => {
+    throw redirect({ to: "/slides/$deckSlug", params: { deckSlug: params.deckSlug }, search: { slide: undefined } });
+  },
 });
 export const router = createRouter({
   routeTree: rootRoute.addChildren([
